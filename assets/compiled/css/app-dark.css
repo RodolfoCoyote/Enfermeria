@@ -10184,6 +10184,23 @@ tr:hover {
   top: 2px;
 }
 
+/* Botón 4 */
+.btn-4 {
+  background: #95a5a6 !important; /* Color gris metálico base */
+  color: #fff !important; /* Texto blanco */
+  border: 1px solid #7f8c8d; /* Borde para un efecto más metálico */
+}
+
+.btn-4:hover {
+  background: #7f8c8d !important; /* Un gris un poco más oscuro para el hover */
+}
+
+.btn-4:active {
+  background: #7f8c8d !important;
+  top: 2px; /* Desplazamiento hacia abajo al hacer clic */
+}
+
+
 .icon-info:before {
   content: "\f05a";
 }
@@ -10194,4 +10211,8 @@ tr:hover {
 
 .icon-photo:before {
   content: "\f03e";
+}
+
+.icon-rev:before{
+  content: "\f249";
 }

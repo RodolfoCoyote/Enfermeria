@@ -33,9 +33,9 @@
             <span>Medicamentos</span>
           </a>
           <ul class="submenu">
-            <li class="submenu-item">
+            <!-- <li class="submenu-item">
               <a href="nuevo_medicamento.php" class="submenu-link">Nuevo</a>
-            </li>
+            </li> -->
             <li class="submenu-item">
               <a href="ver_medicamentos.php" class="submenu-link">Ver o Editar</a>
             </li>
@@ -48,27 +48,25 @@
           </a>
           <ul class="submenu">
             <li class="submenu-item">
-              <a href="registro_nuevo_proced.php" class="submenu-link">Nuevo</a>
+              <a href="new_procedure.php" class="submenu-link">Nuevo</a>
             </li>
 
             <li class="submenu-item">
-              <a href="ver_procedimientos.php" class="submenu-link">Ver o Editar</a>
+              <a href="view_procedures.php" class="submenu-link">Ver o Editar</a>
             </li>
           </ul>
         </li>
-        <li class="sidebar-item has-sub">
-          <a href="#" class="sidebar-link">
-            <i class="bi bi-person"></i>
-            <span>Usuarios</span>
+        <li class="sidebar-item">
+          <a href="inventory/index.php" class="sidebar-link">
+            <i class="bi bi-prescription2"></i>
+            <span>Inventario</span>
           </a>
-          <ul class="submenu">
-            <li class="submenu-item">
-              <a href="nuevo_enfermero.php" class="submenu-link">Nuevo</a>
-            </li>
-            <li class="submenu-item">
-              <a href="ver_enfermeros.php" class="submenu-link">Ver o Editar</a>
-            </li>
-          </ul>
+        </li>
+        <li class="sidebar-item">
+          <a href="logout.php" class="sidebar-link">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Cerrar Sesión</span>
+          </a>
         </li>
       </ul>
     </div>

@@ -118,6 +118,8 @@ if (!isset($_SESSION['user_name'])) {
             <button class="btn-options btn-1 btn-sep icon-info" data-method="info" id="btnInfo">Información</button>
             <button class="btn-options btn-2 btn-sep icon-pills" data-method="med" id="btnMed">Medicamentos</button>
             <button class="btn-options btn-3 btn-sep icon-photo" data-method="photo" id="btnPhoto">Fotografías</button>
+            <button class="btn-options btn-4 btn-sep icon-rev" data-method="photo" id="btnRev">Revisiones</button>
+
           </div>
         </div>
         <div class="modal-footer">

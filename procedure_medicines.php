@@ -176,7 +176,7 @@ if (!isset($_SESSION['user_name'])) {
   <script type="text/javascript">
     $(document).ready(function() {
       var table = $("#tabla_medicamentos").DataTable({
-        ajax: 'scripts/ajax-med-para-registros.php?id=<?= $_GET['id']; ?>',
+        ajax: 'scripts/load/medicines_per_procedure.php?id=<?= $_GET['id']; ?>',
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
         },
