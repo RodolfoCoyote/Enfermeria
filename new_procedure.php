@@ -55,6 +55,11 @@ if (!isset($_SESSION['user_name'])) {
       background-color: #3085d6;
       color: #fff;
     }
+
+    .form-label {
+      color: #e0ac44 !important;
+      font-weight: bold !important;
+    }
   </style>
 </head>
 
@@ -136,18 +141,34 @@ if (!isset($_SESSION['user_name'])) {
                     <form method="POST" id="formNuevoProced" action="#">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label for="basicInput">Número de Expediente</label>
-                          <input type="number" class="form-control" name="num_expediente" id="num_expediente" placeholder="" required>
-                        </div>
-                        <div class="form-group">
-                          <label for="basicInput">Nombre del Paciente</label>
+                          <label class="form-label" for="basicInput">Nombre del Paciente</label>
                           <input type="text" class="form-control" name="nombre_paciente" id="nombre_paciente" placeholder="" required>
                         </div>
                       </div>
                       <div class="row">
                         <div class="col-6">
                           <div class="form-group">
-                            <label for="basicInput">Tipo de Injerto</label>
+                            <label class="form-label" for="basicInput">Número de Expediente</label>
+                            <input type="number" class="form-control" name="num_expediente" id="num_expediente" placeholder="" required>
+                          </div>
+                        </div>
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label class="form-label" for="basicInput">Clínica:</label>
+                            <select class="form-control" id="clinica" name="clinica" required>
+                              <option value=0 selected disabled readonly>Selecciona</option>
+                              <option data-clinicesp="cdmx" data-clinicname="CDMX" value=1>CDMX</option>
+                              <option data-clinicesp="cul" data-clinicname="Culiacán" value=2>Culiacán</option>
+                              <option data-clinicesp="mzt" data-clinicname="Mazatlán" value=3>Mazatlán</option>
+                              <option data-clinicesp="tj" data-clinicname="Tijuana" value=4>Tijuana</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6">
+                          <div class="form-group">
+                            <label class="form-label" for="basicInput">Tipo de Injerto</label>
                             <select class="form-control" id="tipo_injerto" name="tipo_injerto" required>
                               <option value=0 selected disabled readonly>Selecciona</option>
                               <option value=1>Capilar</option>
@@ -158,12 +179,12 @@ if (!isset($_SESSION['user_name'])) {
                         </div>
                         <div class="col-6">
                           <div class="form-group">
-                            <label for="basicInput">Sala utilizada:</label>
+                            <label class="form-label" for="basicInput">Sala utilizada:</label>
                             <select class="form-control" id="sala" name="sala" required>
                               <option value=0 selected disabled readonly>Selecciona</option>
                               <option value=1>1</option>
                               <option value=2>2</option>
-                              <option value=2>3</option>
+                              <option value=3>3</option>
                             </select>
                           </div>
                         </div>
@@ -171,26 +192,22 @@ if (!isset($_SESSION['user_name'])) {
                       <div class="row">
                         <div class="col-6">
                           <div class="form-group">
-                            <label for="basicInput">Especialista responsable:</label>
+                            <label class="form-label" for="basicInput">Especialista responsable:</label>
                             <select class="form-control" id="especialista" name="especialista" required>
-                              <option value=0 selected disabled readonly>Selecciona</option>
-                              <option value="Dr. Alejandro Santana">Dr. Alejandro Santana</option>
-                              <option value="Luis">Luis</option>
-                              <option value="Hector">Héctor</option>
-                              <option value="Xochitl">Xóchitl</option>
+
                             </select>
                           </div>
                         </div>
                         <div class="col-6">
                           <div class="form-group">
-                            <label for="basicInput">Fecha del Procedimiento:</label>
+                            <label class="form-label" sfor="basicInput">Fecha del Procedimiento:</label>
                             <input type="date" class="form-control" name="fecha_proced" id="fecha_proced" placeholder="" required>
                           </div>
                         </div>
                       </div>
 
                       <div class="form-group">
-                        <label for="basicInput">Observaciones</label>
+                        <label class="form-label" for="basicInput">Observaciones</label>
                         <textarea type="date" class="form-control" name="observaciones" id="observaciones" rows=3></textarea>
                       </div>
                       <input id="btnAddProc" type="submit" class="btn btn-primary btn-block me-1 mb-1" />
@@ -233,16 +250,16 @@ if (!isset($_SESSION['user_name'])) {
               title: 'Listo!',
               text: 'Procedimiento registrado...',
               icon: 'success',
-              timer: 1500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
               timerProgressBar: true, // Muestra una barra de progreso
               showConfirmButton: false
             }).then((result) => {
-              window.location.href = 'registro_farmacos_proced.php?id=' + procedId;
+              window.location.href = 'view_procedures.php?id=' + procedId;
             });
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'El número de procedimiento ya ha sido registrado. Verifica.',
+              text: response.message,
               icon: 'error',
               timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
               timerProgressBar: true, // Muestra una barra de progreso
@@ -251,6 +268,70 @@ if (!isset($_SESSION['user_name'])) {
           }
         }).fail(function(response) {
           console.log(response);
+        });
+      });
+      $("#clinica").change(function() {
+        let clinic_selected = $(this).find('option:selected').data('clinicesp');
+        let especialistas = [{
+            valor: 'Dr. Alejandro Santana',
+            texto: 'Dr. Alejandro Santana',
+            clinic: 'Todas'
+          },
+          {
+            valor: 'Luis Moreno',
+            texto: 'Luis Moreno',
+            clinic: 'cdmx'
+          },
+          {
+            valor: 'Xóchitl Lagunas',
+            texto: 'Xóchitl Lagunas',
+            clinic: 'cdmx'
+          },
+          {
+            valor: 'Héctor Carmona',
+            texto: 'Héctor Carmona',
+            clinic: 'cdmx'
+          },
+          {
+            valor: 'Antonio',
+            texto: 'Antonio',
+            clinic: 'cul'
+          },
+          {
+            valor: 'Laura',
+            texto: 'Laura',
+            clinic: 'cul'
+          },
+          {
+            valor: 'Dra. Fernanda',
+            texto: 'Dra. Fernanda',
+            clinic: 'cul'
+          }, {
+            valor: 'Itzel',
+            texto: 'Itzel',
+            clinic: 'mzt'
+          }, {
+            valor: 'Belén',
+            texto: 'Belén',
+            clinic: 'tj'
+          }
+        ];
+
+        // Vaciar el select
+        $('#especialista').empty();
+
+        $('#especialista').append($('<option>', {
+          value: 'Dr. Alejandro Santana',
+          text: 'Dr. Alejandro Santana'
+        }));
+        // Añadir cada nueva opción al select
+        $.each(especialistas, function(i, opcion) {
+          if (clinic_selected == opcion.clinic) {
+            $('#especialista').append($('<option>', {
+              value: opcion.valor,
+              text: opcion.texto
+            }));
+          }
         });
       });
     });

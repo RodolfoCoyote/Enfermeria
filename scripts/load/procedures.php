@@ -4,12 +4,18 @@ ini_set('display_errors', 1);
 ini_set('html_errors', 1); // TS
 header('Content-Type: application/json');
 
-
+session_start();
 require_once '../connection_db.php';
 
 $data_array = array();
-// SQL para obtener los datos-
-$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,notes,created_by FROM enf_procedures;";
+$user_clinic = $_SESSION['user_clinic'];
+// SQL para obtener los datos
+$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,notes,created_by FROM enf_procedures WHERE clinic = $user_clinic;";
+
+if ($user_clinic == 5) {
+	$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,notes,created_by FROM enf_procedures;";
+}
+
 // Ejeuctar el SQL
 $query = $conn->query($sql);
 // Recorrer los resultados

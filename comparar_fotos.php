@@ -243,7 +243,7 @@ if (!isset($_SESSION['user_name'])) {
               side: side
             },
             method: "POST",
-            url: "test.php",
+            url: "scripts/load/bunny_compare_image.php",
           })
           .done(function(thumbs) {
             $("#thumbs-side-" + side).html(thumbs);

@@ -1,13 +1,13 @@
 <?php
+session_start();
 
-$con = new mysqli("localhost", "root", "", "losreyesdelinjerto_com");
-//$con = new mysqli("mysql.losreyesdelinjerto.com","losreyesdelinjer","BxJ9g2GC","losreyesdelinjerto_com");
+require_once '../connection_db.php';
 
 $data_array = array();
 $proced_id = $_GET['id'];
 
 $sql = "SELECT * FROM enf_used_medicines WHERE procedure_id = $proced_id;";
-$query = mysqli_query($con, $sql);
+$query = mysqli_query($conn, $sql);
 if (mysqli_num_rows($query) > 0) {
 
     $sql = "SELECT CONCAT(name,\" \",presentation,\" \",dosage) as name, CONCAT(\"
@@ -22,7 +22,7 @@ if (mysqli_num_rows($query) > 0) {
     </div>\") as options FROM enf_medicines med INNER JOIN enf_used_medicines used ON med.id = used.medicine_id WHERE used.procedure_id = $proced_id;";
 }
 
-$query = $con->query($sql);
+$query = $conn->query($sql);
 while ($data = $query->fetch_object()) {
 
     $data_array[] = array(

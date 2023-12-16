@@ -23,7 +23,9 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="./assets/extensions/font-awesome/css/font-awesome.css" />
+  <style>
 
+  </style>
 </head>
 
 <body>
@@ -83,22 +85,20 @@ if (!isset($_SESSION['user_name'])) {
       <div id="main-content">
         <h3>Lista de procedimientos</h3>
         <!-- Basic Tables start -->
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table stripe row-border order-column" id="table1">
-              <thead>
-                <tr>
-                  <th>Fecha Proc.</th>
-                  <th>Exp. No.</th>
-                  <th>Paciente</th>
-                  <th>Injerto</th>
-                  <th>Sala</th>
-                  <th>Especialista</th>
-                  <th>Observaciones</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
+        <div class="table-responsive">
+          <table class="table table-striped" id="table1">
+            <thead>
+              <tr>
+                <th>Fecha Proc.</th>
+                <th>Exp. No.</th>
+                <th>Paciente</th>
+                <th>Injerto</th>
+                <th>Sala</th>
+                <th>Especialista</th>
+                <th>Observaciones</th>
+              </tr>
+            </thead>
+          </table>
         </div>
         <!-- Basic Tables end -->
       </div>
@@ -215,6 +215,7 @@ if (!isset($_SESSION['user_name'])) {
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
       },
+      responsive: true,
       scrollX: true,
       order: [
         [1, 'desc']
@@ -232,7 +233,7 @@ if (!isset($_SESSION['user_name'])) {
     $(document).on("click", ".single_procedure", function(e) {
       e.preventDefault()
       let procedure_id = $(this).data('procedureid');
-      $("#btnInfo,#btnMed,#btnPhoto").data('procedureid', procedure_id);
+      $("#btnInfo,#btnMed,#btnPhoto,#btnRev").data('procedureid', procedure_id);
       $("#optionsModal").modal("show");
     });
     $(document).on("click", "#btnInfo", function() {
@@ -269,6 +270,10 @@ if (!isset($_SESSION['user_name'])) {
     $(document).on("click", "#btnMed", function() {
       const procedure_id = $(this).data('procedureid');
       window.location.href = "procedure_medicines.php?id=" + procedure_id;
+    });
+    $(document).on("click", "#btnRev", function() {
+      const procedure_id = $(this).data('procedureid');
+      window.location.href = "mod_revisiones/index.php?id=" + procedure_id;
     });
   </script>
 </body>

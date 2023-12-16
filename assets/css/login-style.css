@@ -17,12 +17,12 @@ section {
 }
 .form-box {
   position: relative;
-  width: 400px;
-  height: 450px;
+  width: 450px;
+  height: 550px;
   background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.5);
   border-radius: 20px;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(9px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +43,7 @@ h2 {
   top: 50%;
   left: 5px;
   transform: translateY(-50%);
-  color: #fff;
+  color: #e0ac44;
   font-size: 1em;
   pointer-events: none;
   transition: 0.5s;

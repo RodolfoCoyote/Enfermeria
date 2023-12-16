@@ -9,13 +9,36 @@ $num_med_record = $_GET['num_med_record'];
 $step = $_GET['step'];
 
 try {
+
+	$clinic = $_GET['clinic'];
+
+
+	switch ($clinic) {
+		case 1: // CDMX
+			$api_key = '67708a26-bc3d-4637-bce324a44a8d-9766-4ecb';
+			$storageZoneName = 'rdi-enf-cdmx';
+			break;
+		case 2: // Culiacán
+			$api_key = '90086039-bce6-43d4-bc3dc22d891c-ee35-4e6b';
+			$storageZoneName = 'rdi-enf-cul';
+			break;
+		case 3: // Mazatlán
+			$api_key = 'bfae151f-118b-4428-acc65e702314-1987-4471';
+			$storageZoneName = 'rdi-enf-mzt';
+		case 4: // Tijuana
+			$api_key = 'bc1fee1f-25c4-43cc-9662f7fd5588-a964-497b';
+			$storageZoneName = 'rdi-enf-tij';
+		default;
+			echo 1;
+	}
+
 	$preview = $config = $errors = [];
 
-	$bunnyCDNStorage = new BunnyCDNStorage("rdi-enf-cdmx", "67708a26-bc3d-4637-bce324a44a8d-9766-4ecb", "LA");
+	$bunnyCDNStorage = new BunnyCDNStorage($storageZoneName, $api_key, "LA");
 
 	foreach ($_FILES['file']['name'] as $position => $fileName) {
 		// Ruta en BunnyCDN donde deseas almacenar el archivo original
-		$rutaBunnyCDNOriginal = "/rdi-enf-cdmx/" . $num_med_record . "/" . $step . "/";
+		$rutaBunnyCDNOriginal = $storageZoneName . "/" . $num_med_record . "/" . $step . "/";
 		$rutaBunnyCDNThumbnail = $rutaBunnyCDNOriginal . "thumb/";
 
 		// Nombre del archivo original en BunnyCDN (puedes mantener el mismo nombre o cambiarlo según tus necesidades)
@@ -67,7 +90,7 @@ try {
 			throw new Exception('Error al subir la miniatura a BunnyCDN.');
 		}
 
-		$preview[] = "<img data-zoom='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&num_med_record=" . $num_med_record . "&step=" . $step . "&type=zoom' src='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&num_med_record=" . $num_med_record . "&step=" . $step . "' class='file-preview-image'>";
+		$preview[] = "<img data-zoom='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&clinic=" . $clinic . "&num_med_record=" . $num_med_record . "&step=" . $step . "&type=zoom' src='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&clinic=" . $clinic . "&num_med_record=" . $num_med_record . "&step=" . $step . "' class='file-preview-image'>";
 		$config[] = [
 			'caption' => $nombreArchivoOriginalBunnyCDN, // server api to delete the file based on key
 		];

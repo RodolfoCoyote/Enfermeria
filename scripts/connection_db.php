@@ -20,7 +20,4 @@ try {
 } catch (Exception $e) {
   $response['error'] = true;
   $response['message'] = $e->getMessage();
-
-  header('Content-Type: application/json');
-  echo json_encode($response);
 }

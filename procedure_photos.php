@@ -27,7 +27,7 @@ if (!isset($_SESSION['user_name'])) {
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.min.css" crossorigin="anonymous">
 	<link href="assets/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
 	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.4/swiper-bundle.css'>
-	<link rel="stylesheet" href="cards/style.css">
+	<link rel="stylesheet" href="assets/extensions/cards/style.css">
 
 	<style>
 		.paciente_info {
@@ -108,9 +108,28 @@ if (!isset($_SESSION['user_name'])) {
 
 										$tipo_injerto = ($row['type'] == 1) ? 'Capilar' : 'Barba';
 										$date = strtotime($row['procedure_date']);
+
+										switch ($row['clinic']) {
+											case 1:
+												$clinic_label = "CDMX";
+												break;
+											case 2:
+												$clinic_label = "Culiacán";
+												break;
+											case 3:
+												$clinic_label = "Mazatlán";
+												break;
+											case 4:
+												$clinic_label = "Tijuana";
+												break;
+											default:
+												$clinic_label = "Clínica no asignada";
+										}
+
 										echo "<h3 style='color:#e0ac44;' class='card-title'>{$row['name']}</h3>";
-										echo "<p><span style='font-size:20px;' class='badge bg-secondary'>#{$row['num_med_record']}</span>";
-										echo "<span style='font-size:20px;' class='badge bg-primary'>{$tipo_injerto}</span></p>";
+										echo "<p><span style='font-size:20px;' class='badge bg-secondary'>#{$row['num_med_record']}</span></p>";
+										echo "<p><span style='font-size:20px;' class='badge bg-primary'>{$tipo_injerto}</span>";
+										echo "<span style='font-size:20px;' class='badge bg-light'>{$clinic_label}</span></p>";
 
 										echo "<p style='font-size:20px;'><strong>Sala: </strong>" . $row['room'] . "<br />";
 										echo "<strong>Especialista: </strong>" . $row['specialist'] . "<br />";
@@ -118,6 +137,7 @@ if (!isset($_SESSION['user_name'])) {
 										?>
 									</div>
 									<input type="hidden" id="num_med_record" name="num_med_record" value="<?= $row['num_med_record'] ?>">
+									<input type="hidden" id="clinic" name="clinic" value="<?= $row['clinic']; ?>">
 								</div>
 							</div>
 						</div>
@@ -171,31 +191,51 @@ if (!isset($_SESSION['user_name'])) {
 			var i = 0;
 			let container = $(".swiper-wrapper");
 			var num_med_record = $("#num_med_record").val();
+			var clinic = $("#clinic").val();
+
 			folders.forEach(function(folder) {
+				let btn_disabled = (i > 0) ? 'style="display:none;"' : '';
+
 				let swiperSlide = `
-          <div class="swiper-slide">
-            <div class="people__card">
-              <div class="people__image">
-                <img
-                  src="https://www.losreyesdelinjerto.com/assets/img/leon-footer.webp"
-                  style="width:50%;height:auto;">
-              </div>
-              <div class="people__info">
-                <ul class="people__social">
-                </ul>
-                <h3 class="people__name">${folders_name[i]}</h3>
-              </div>
-              <div class="people__btn">
-                <a class="view_imgs" href="#" data-step="${folder}" data-nummedrecord="${num_med_record}">Ver fotos</a>
-              </div>
-            </div>
-          </div>`;
+				<div class="swiper-slide">
+					<div class="people__card">
+					<div class="people__image">
+						<img
+						src="https://www.losreyesdelinjerto.com/assets/img/leon-footer.webp"
+						style="width:50%;height:auto;">
+					</div>
+					<div class="people__info">
+						<ul class="people__social">
+						</ul>
+						<h3 class="people__name">${folders_name[i]}</h3>
+					</div>
+					<div class="people__btn" ${btn_disabled}>
+						<a class="view_imgs" href="#" data-clinic="${clinic}" data-step="${folder}" data-nummedrecord="${num_med_record}">Ver fotos</a>
+					</div>
+					</div>
+				</div>`;
 
 				$(".swiper-wrapper").append(swiperSlide);
 				i++;
 			});
 
 			$('#file').fileinput({});
+
+			const swiper = new Swiper(".swiper", {
+				loop: false,
+				slidesPerView: "auto",
+				centeredSlides: true,
+				observeParents: !0,
+				observer: !0,
+			});
+
+			swiper.on('slideChangeTransitionEnd', function() {
+				$(".inputfile-container").fadeOut('slow');
+				$(".people__btn").css('display', 'none');
+
+				$(swiper.el).find('.swiper-slide-active .people__btn').css('display', 'block');
+			});
+
 		});
 	</script>
 	<script>
@@ -203,6 +243,7 @@ if (!isset($_SESSION['user_name'])) {
 			e.preventDefault();
 			let num_med_record = $(this).data('nummedrecord');
 			let step = $(this).data('step');
+			let clinic = $(this).data('clinic');
 			console.log(num_med_record);
 			console.log(step);
 
@@ -215,7 +256,8 @@ if (!isset($_SESSION['user_name'])) {
 			$.ajax({
 					data: {
 						num_med_record: num_med_record,
-						step: step
+						step: step,
+						clinic: clinic
 					},
 					dataType: "json",
 					method: "POST",
@@ -228,7 +270,7 @@ if (!isset($_SESSION['user_name'])) {
 					$('#file').fileinput({
 						allowedFileExtensions: ["jpg", "png", "heic", "jpeg", "mov", "mp4"],
 						language: "es",
-						uploadUrl: 'scripts/add/bunny_images.php?num_med_record=' + num_med_record + '&step=' + step,
+						uploadUrl: 'scripts/add/bunny_images.php?clinic=' + clinic + '&num_med_record=' + num_med_record + '&step=' + step,
 						showRemove: false,
 						showCancel: false,
 						initialPreview: response.initialPreview,
@@ -250,7 +292,7 @@ if (!isset($_SESSION['user_name'])) {
 
 		});
 	</script>
-	<script src="cards/script.js"></script>
+	<script src="assets/extensions/cards/script.js"></script>
 </body>
 
 </html>

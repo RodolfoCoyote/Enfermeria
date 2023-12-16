@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div class="logo">
           <a href="index.php">
-            <img src="logo.webp" alt="Logo" />
+            <img src="https://www.losreyesdelinjerto.com/assets/img/logo.webp" alt="Logo" />
           </a>
         </div>
         <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
@@ -33,11 +33,11 @@
             <span>Medicamentos</span>
           </a>
           <ul class="submenu">
-            <!-- <li class="submenu-item">
-              <a href="nuevo_medicamento.php" class="submenu-link">Nuevo</a>
-            </li> -->
             <li class="submenu-item">
-              <a href="ver_medicamentos.php" class="submenu-link">Ver o Editar</a>
+              <a href="new_medicine.php" class="submenu-link">Nuevo</a>
+            </li>
+            <li class="submenu-item">
+              <a href="view_medicines.php" class="submenu-link">Ver o Editar</a>
             </li>
           </ul>
         </li>
@@ -56,14 +56,14 @@
             </li>
           </ul>
         </li>
-        <li class="sidebar-item">
+        <!-- <li class="sidebar-item">
           <a href="inventory/index.php" class="sidebar-link">
             <i class="bi bi-prescription2"></i>
             <span>Inventario</span>
           </a>
-        </li>
+        </li> -->
         <li class="sidebar-item">
-          <a href="logout.php" class="sidebar-link">
+          <a href="scripts/logout.php" class="sidebar-link">
             <i class="bi bi-box-arrow-right"></i>
             <span>Cerrar Sesión</span>
           </a>
