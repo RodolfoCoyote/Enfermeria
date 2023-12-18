@@ -1,12 +1,10 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_name'])) {
+if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
   header('Location: login.php'); // Redirigir al formulario de inicio de sesión
   exit();
 }
-
-// Resto del contenido de la página aquí
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +21,8 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="stylesheet" href="./assets/compiled/css/table-datatable-jquery.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body>
@@ -181,23 +181,23 @@ if (!isset($_SESSION['user_name'])) {
           <div class="modal-body">
             <label for="medicamento_id">ID</label>
             <div class="form-group">
-              <input id="medicamento_id" name="medicamento_id" type="text" placeholder="ID" class="form-control" readonly />
+              <input id="med_id" name="id" type="text" placeholder="ID" class="form-control" readonly />
             </div>
             <label for="nombre">Nombre del fármaco </label>
             <div class="form-group">
-              <input id="nombre" name="nombre" type="Nombre del fármaco" placeholder="text" class="form-control" />
+              <input id="name" name="name" type="Nombre del fármaco" placeholder="text" class="form-control" />
             </div>
             <label for="presentacion">Presentación </label>
             <div class="form-group">
-              <input id="presentacion" name="presentacion" type="text" placeholder="Presentación" class="form-control" />
+              <input id="presentation" name="presentation" type="text" placeholder="Presentación" class="form-control" />
             </div>
             <label for="gramaje">Gramaje </label>
             <div class="form-group">
-              <input id="gramaje" name="gramaje" type="text" placeholder="Gramaje" class="form-control" />
+              <input id="dosage" name="dosage" type="text" placeholder="Gramaje" class="form-control" />
             </div>
             <label for="cantidad_sala">Cantidad que debe haber en sala </label>
             <div class="form-group">
-              <input id="cantidad_sala" name="cantidad_sala" type="number" placeholder="" class="form-control" />
+              <input id="initial_stock" name="initial_stock" type="number" placeholder="" class="form-control" />
             </div>
           </div>
           <div class="modal-footer">
@@ -214,6 +214,7 @@ if (!isset($_SESSION['user_name'])) {
       </div>
     </div>
   </div>
+
   <script src="assets/static/js/initTheme.js"></script>
   <script src="assets/static/js/components/dark.js"></script>
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
@@ -250,39 +251,33 @@ if (!isset($_SESSION['user_name'])) {
     jquery_datatable.on('draw', setTableColor)
 
     $(document).on("click", ".ver_medicamento", function() {
-      var medicamento_id = $(this).attr('medicamento_id');
-      $.ajax({
-        type: "POST",
-        url: 'scripts/obtener_medicamento_individual.php',
-        data: {
-          medicamento_id: medicamento_id
-        },
-        success: function(response) {
-          let data = JSON.parse(response);
-          //console.log(data);
-          $("#medicamento_id").val(data['id']);
-          $("#nombre").val(data['nombre']);
-          $("#presentacion").val(data['presentacion']);
-          $("#gramaje").val(data['gramaje']);
-          $("#cantidad_sala").val(data['cantidad_sala']);
-        }
-      });
-      $('#inlineForm').modal('show');
+      let fields = ["med_id", "name", "presentation", "dosage", "initial_stock"];
 
+      let tr = $(this).closest('tr');
+      let i = 0;
+
+      tr.find('td').each(function() {
+        $("#" + fields[i]).val($(this).text());
+        i++;
+      })
+      $("#inlineForm").modal("show");
     });
 
     $(document).on("click", ".btn_abastecer", function() {
-      var medicamento_id = $(this).attr('medicamento_id');
-      $.ajax({
-        type: "POST",
-        url: 'scripts/abastecer_medicamento.php',
-        data: {
-          medicamento_id: medicamento_id
-        },
-        success: function() {
-          location.reload();
-        }
-      });
+      let medicamento_id = $(this).attr('medicamento_id');
+
+      $("#id_farmaco").val(medicamento_id);
+
+      let qty_sala = $(this).data('sala');
+      let qty_actual = $(this).data('actual');
+      let qty_abastecida = qty_sala - qty_actual;
+
+
+      $("#spanQtyActual").html(qty_actual);
+      $("#spanQtySala").html(qty_sala);
+      $("#qty_abastecida").val(qty_abastecida);
+
+      $("#abastecerModal").modal("show");
     });
   </script>
 </body>

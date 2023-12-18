@@ -4,28 +4,33 @@ session_start();
 require_once '../connection_db.php';
 
 $data_array = array();
-// SQL para obtener los datos
-$sql = "SELECT *, cantidad_sala-cantidad_actual as abastecer, 
-    IF(cantidad_sala-cantidad_actual=0,
-        CONCAT('<button class=\'btn btn-primary ver_medicamento\' medicamento_id=',id,'><i class=\'bi bi-pencil\'></i></button>'),
-        CONCAT('<button class=\'btn btn-primary ver_medicamento\' medicamento_id=',id,'><i class=\'bi bi-pencil\'></i></button>
-                <button class=\'btn btn-success btn_abastecer\' medicamento_id=',id,'><i class=\'bi bi-check-lg\'></i></button>')) 
-        AS opciones FROM medicamentos;";
-// Ejeuctar el SQL
-$query = $conn->query($sql);
-// Recorrer los resultados
-while ($data = $query->fetch_object()) {
+$user_clinic = $_SESSION['user_clinic'];
 
-    // Poner los datos en un array en el orden de los campos de la tabla
+// SQL para obtener los datos
+if ($user_clinic == 5) {
+    $sql = "SELECT id, name, presentation, dosage, clinic, initial_stock, current_stock, initial_stock-current_stock AS abastecer FROM enf_medicines;";
+} else {
+    $sql = "SELECT id, name, presentation, dosage, clinic, initial_stock, current_stock, initial_stock-current_stock AS abastecer FROM enf_medicines WHERE clinic = $user_clinic;";
+}
+
+$query = $conn->query($sql);
+
+while ($data = $query->fetch_object()) {
+    $opciones = '<button class="btn btn-primary ver_medicamento"><i class="fa fa-pencil"></i></button>';
+
+    if ($data->abastecer > 0) {
+        $opciones .= '<button class="btn btn-success btn_abastecer"><i class="fa fa-check"></i></button>';
+    }
+
     $data_array[] = array(
         $data->id,
-        $data->nombre,
-        $data->presentacion,
-        $data->gramaje,
-        $data->cantidad_sala,
-        $data->cantidad_actual,
+        $data->name,
+        $data->presentation,
+        $data->dosage,
+        $data->initial_stock,
+        $data->current_stock,
         $data->abastecer,
-        $data->opciones
+        $opciones
     );
 }
 // crear un array con el array de los datos, importante que esten dentro de : data

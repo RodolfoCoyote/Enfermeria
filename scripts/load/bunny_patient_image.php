@@ -25,11 +25,13 @@ try {
         case 3: // Mazatlán
             $api_key = 'bfae151f-118b-4428-acc65e702314-1987-4471';
             $storageZoneName = 'rdi-enf-mzt';
+            break;
         case 4: // Tijuana
             $api_key = 'bc1fee1f-25c4-43cc-9662f7fd5588-a964-497b';
             $storageZoneName = 'rdi-enf-tij';
-        default;
-            echo 1;
+            break;
+        default:
+            echo 0;
     }
 
     $directoryPath = $num_med_record . "/" . $step . "/thumb/";

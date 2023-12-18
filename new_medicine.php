@@ -19,6 +19,8 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="shortcut icon" href="../1/assets/img/favicon.png" type="image/x-icon" />
   <link rel="stylesheet" href="assets/compiled/css/app.css" />
   <link rel="stylesheet" href="assets/compiled/css/app-dark.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+
 </head>
 
 <body>
@@ -97,7 +99,7 @@ if (!isset($_SESSION['user_name'])) {
                     <div class="card-body">
                       <div class="row">
                         <div class="col-md-6">
-                          <form action="scripts/load/medicine.php" method="POST">
+                          <form action="scripts/add/medicine.php" method="POST" id="formNewMedicine">
                             <div class="form-group">
                               <label for="basicInput">Nombre del medicamento</label>
                               <input type="text" class="form-control" name="name" id="name" placeholder="">
@@ -112,7 +114,7 @@ if (!isset($_SESSION['user_name'])) {
                             </div>
                             <div class="form-group">
                               <label for="basicInput">Cantidad que debe haber en sala</label>
-                              <input type="number" class="form-control" name="initial_stock" id="initial_stock" placeholder="">
+                              <input type="number" class="form-control" name="initial_stock" id="initial_stock" min=0 placeholder="">
                             </div>
                             <div class="form-group">
                               <label for="basicInput">Asignar a la clínica:</label>
@@ -142,12 +144,61 @@ if (!isset($_SESSION['user_name'])) {
       <?php require_once "templates/footer.php"; ?>
     </div>
   </div>
+
+  <script src="assets/static/js/pages/jquery.js"></script>
   <script src="assets/static/js/initTheme.js"></script>
   <script src="assets/static/js/components/dark.js"></script>
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="assets/compiled/js/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
   <script>
+    $(document).ready(function() {
+      $("#formNewMedicine").submit(function(e) {
+        e.preventDefault();
 
+        const method = $(this).attr('method');
+        const url = $(this).attr('action');
+        const formData = $(this).serialize();
+        $.ajax({
+          method: method,
+          url: url,
+          data: formData,
+          dataType: 'json'
+        }).done(function(response) {
+          if (response.success) {
+
+            Swal.fire({
+              title: 'Listo!',
+              text: response.message,
+              icon: 'success',
+              timer: 2500, // 
+              timerProgressBar: true,
+              showConfirmButton: false
+            }).then((result) => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: response.message,
+              icon: 'error',
+              timer: 2500,
+              timerProgressBar: true,
+              showConfirmButton: false // No muestra el botón de confirmación
+            });
+          }
+        }).fail(function(response) {
+          Swal.fire({
+            title: 'Error',
+            text: response.message,
+            icon: 'error',
+            timer: 2500,
+            timerProgressBar: true,
+            showConfirmButton: false // No muestra el botón de confirmación
+          });
+        });
+      });
+    });
   </script>
 </body>
 

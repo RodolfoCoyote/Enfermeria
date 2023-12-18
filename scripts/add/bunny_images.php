@@ -25,11 +25,13 @@ try {
 		case 3: // Mazatlán
 			$api_key = 'bfae151f-118b-4428-acc65e702314-1987-4471';
 			$storageZoneName = 'rdi-enf-mzt';
+			break;
 		case 4: // Tijuana
 			$api_key = 'bc1fee1f-25c4-43cc-9662f7fd5588-a964-497b';
 			$storageZoneName = 'rdi-enf-tij';
-		default;
-			echo 1;
+			break;
+		default:
+			echo 0;
 	}
 
 	$preview = $config = $errors = [];
@@ -55,7 +57,7 @@ try {
 			throw new Exception('Error al subir el archivo original a BunnyCDN.');
 		}
 
-		/*		$imagick = new Imagick($nombreArchivoLocal);
+		$imagick = new Imagick($nombreArchivoLocal);
 
 		$width = $imagick->getImageWidth();
 		$height = $imagick->getImageHeight();
@@ -84,15 +86,17 @@ try {
 		// Guardar el blob como un archivo temporal
 		$archivoTemporal = tempnam(sys_get_temp_dir(), 'thumbnail_');
 		file_put_contents($archivoTemporal, $imagenGenerada);
-*/
+
 		// Cargar la miniatura a BunnyCDN $archivoTemporal
-		if (!$bunnyCDNStorage->uploadFile($nombreArchivoLocal, $rutaBunnyCDNThumbnail . $nombreArchivoThumbnailBunnyCDN)) {
+		if (!$bunnyCDNStorage->uploadFile($archivoTemporal, $rutaBunnyCDNThumbnail . $nombreArchivoThumbnailBunnyCDN)) {
 			throw new Exception('Error al subir la miniatura a BunnyCDN.');
 		}
 
 		$preview[] = "<img data-zoom='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&clinic=" . $clinic . "&num_med_record=" . $num_med_record . "&step=" . $step . "&type=zoom' src='scripts/load/bunny_patient_image.php?filename=" . $nombreArchivoOriginalBunnyCDN . "&clinic=" . $clinic . "&num_med_record=" . $num_med_record . "&step=" . $step . "' class='file-preview-image'>";
 		$config[] = [
-			'caption' => $nombreArchivoOriginalBunnyCDN, // server api to delete the file based on key
+			'caption' => $nombreArchivoOriginalBunnyCDN,
+			'key' => rand("100", "500"), // Asigna una clave única
+			'url' => "scripts/delete/bunny_image.php?filename={$nombreArchivoOriginalBunnyCDN}&clinic={$clinic}&num_med_record={$num_med_record}&step={$step}"
 		];
 	}
 

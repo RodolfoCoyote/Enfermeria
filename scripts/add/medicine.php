@@ -7,28 +7,33 @@ session_start();
 require_once "../connection_db.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Recolectar los datos del POST
-    $name = $_POST['name'];
-    $nickname = $_POST['nickname'];
-    $password = $_POST['password'];
-    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
     $clinic = $_POST['clinic'];
-    $privilegios = 1;
-    // Prepara la consulta
-    $sql = $conn->prepare("INSERT IGNORE INTO usuarios (nombre, usuario, contrasena, clinica, privilegios, ultimo_acceso) VALUES (?, ?, ?, ?, ?, NOW())");
-    // Vincula los parámetros
-    $sql->bind_param("sssii", $name, $nickname, $hashed_password, $clinic, $privilegios);
+    $user_clinic = $_SESSION['user_clinic'];
 
-    if ($sql->execute()) {
+    if ($clinic == $user_clinic || $user_clinic == 5) { // Permisos del usuario para la clínica (O permisos generales)
+        $name = $_POST['name'];
+        $presentation = $_POST['presentation'];
+        $dosage = $_POST['dosage'];
+        $initial_stock = $_POST['initial_stock'];
 
-        if ($sql->affected_rows > 0) {
-            echo json_encode(["success" => true, "message" => "User created successfully"]);
+        // Prepara la consulta
+        $sql = $conn->prepare("INSERT INTO enf_medicines (name, presentation, dosage, clinic, initial_stock, current_stock) VALUES (?, ?, ?, ?, ?, ?)");
+        // Vincula los parámetros
+        $sql->bind_param("sssiii", $name, $presentation, $dosage, $clinic, $initial_stock, $initial_stock);
+
+        if ($sql->execute()) {
+
+            if ($sql->affected_rows > 0) {
+                echo json_encode(["success" => true, "message" => "Medicamento añadido correctamente"]);
+            } else {
+                echo json_encode(["success" => false, "message" => "Contacta a Administración."]);
+            }
+            // Cierra la conexión
+            $conn->close();
         } else {
-            echo json_encode(["success" => false, "message" => "User exists!"]);
+            echo json_encode(["success" => false, "message" => "Contacta a Administración."]);
         }
-        // Cierra la conexión
-        $conn->close();
     } else {
-        echo json_encode(["success" => false, "message" => "Query Fail"]);
+        echo json_encode(["success" => false, "message" => "No tienes permisos para esta clínica."]);
     }
 }

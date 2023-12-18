@@ -37,7 +37,7 @@
               <a href="new_medicine.php" class="submenu-link">Nuevo</a>
             </li>
             <li class="submenu-item">
-              <a href="view_medicines.php" class="submenu-link">Ver o Editar</a>
+              <a href="view_medicines.php?clinic=<?= $_SESSION['user_clinic']; ?>" class="submenu-link">Ver o Editar</a>
             </li>
           </ul>
         </li>

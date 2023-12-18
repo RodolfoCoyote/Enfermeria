@@ -293,24 +293,36 @@ if (!isset($_SESSION['user_name'])) {
             clinic: 'cdmx'
           },
           {
-            valor: 'Antonio',
-            texto: 'Antonio',
+            valor: 'Dra. Fernanda Bojorquez',
+            texto: 'Dra. Fernanda Bojorquez',
             clinic: 'cul'
           },
           {
-            valor: 'Laura',
-            texto: 'Laura',
+            valor: 'Antonio Pérez',
+            texto: 'Antonio Pérez',
             clinic: 'cul'
           },
           {
-            valor: 'Dra. Fernanda',
-            texto: 'Dra. Fernanda',
+            valor: 'Javier Romo',
+            texto: 'Javier Romo',
             clinic: 'cul'
-          }, {
-            valor: 'Itzel',
-            texto: 'Itzel',
+          },
+          {
+            valor: 'Laura Herrera',
+            texto: 'Laura Herrera',
+            clinic: 'cul'
+          },
+          {
+            valor: 'Dra. Oriana Aguilar',
+            texto: 'Dra. Oriana Aguilar',
             clinic: 'mzt'
-          }, {
+          },
+          {
+            valor: 'Itzel Rodríguez',
+            texto: 'Itzel Rodríguez',
+            clinic: 'mzt'
+          },
+          {
             valor: 'Belén',
             texto: 'Belén',
             clinic: 'tj'

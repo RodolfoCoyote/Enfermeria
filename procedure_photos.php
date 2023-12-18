@@ -264,6 +264,8 @@ if (!isset($_SESSION['user_name'])) {
 					url: "scripts/load/bunny_dir.php",
 				})
 				.done(function(response) {
+					console.log(response);
+
 					$(".inputfile-container").fadeIn("slow");
 					$('#file').fileinput('destroy');
 
@@ -277,7 +279,7 @@ if (!isset($_SESSION['user_name'])) {
 						initialPreviewConfig: response.initialPreviewConfig,
 						initialPreviewAsData: false,
 					});
-					$(".kv-file-rotate,.file-drag-handle,.kv-file-remove").css('display', 'none');
+					$(".kv-file-rotate,.file-drag-handle").css('display', 'none');
 
 					$('html, body').animate({
 						scrollTop: $(document).height() - $(window).height()

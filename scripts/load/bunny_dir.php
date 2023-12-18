@@ -22,14 +22,14 @@ switch ($clinic) {
     case 3: // Mazatlán
         $api_key = 'bfae151f-118b-4428-acc65e702314-1987-4471';
         $storageZoneName = 'rdi-enf-mzt';
+        break;
     case 4: // Tijuana
         $api_key = 'bc1fee1f-25c4-43cc-9662f7fd5588-a964-497b';
         $storageZoneName = 'rdi-enf-tij';
-    default;
-        echo 1;
+        break;
+    default:
+        echo 0;
 }
-
-
 $client = new Client();
 
 try {
@@ -49,14 +49,16 @@ try {
         $filesListConfig[] = [
             'caption' => $file['ObjectName'],
             'key' => rand("100", "500"), // Asigna una clave única
+            'url' => "scripts/delete/bunny_image.php?filename={$file['ObjectName']}&clinic={$clinic}&num_med_record={$num_med_record}&step={$step}"
         ];
     }
 
     echo json_encode([
         "message" => "success",
         "initialPreview" => $images,
-        "initialPreviewConfig" => $filesListConfig
-
+        "initialPreviewConfig" => $filesListConfig,
+        "api_key" => $api_key,
+        "storage" => $storageZoneName
     ]);
 } catch (RequestException $e) {
     echo "Error: " . $e->getMessage();
