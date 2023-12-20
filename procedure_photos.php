@@ -96,7 +96,7 @@ if (!isset($_SESSION['user_name'])) {
 					<div class="row">
 						<div class="text-center col-md-12 col-xs-12 order-md-1 order-last">
 							<h5 class="text-center">Registro de fotos.</h5>
-							<div class="offset-md-3 col-md-6 col-xs-12">
+							<div class="mx-auto col-md-6 col-xs-12">
 								<a href="comparar_fotos.php?id=<?= $_GET['id']; ?>" type="button" class="btn btn-warning">Ver evolución del paciente</a>
 								<div class="card">
 									<div class="card-body">

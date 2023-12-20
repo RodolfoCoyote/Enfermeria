@@ -219,7 +219,6 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
   <script src="assets/static/js/components/dark.js"></script>
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="assets/compiled/js/app.js"></script>
-  <script src="assets/extensions/jquery/jquery.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
   <script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
@@ -233,6 +232,7 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
   <script>
     let jquery_datatable = $("#table1").DataTable({
       ajax: 'scripts/load/medicines.php',
+      autoWidth: false,
       language: {
         url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
       },

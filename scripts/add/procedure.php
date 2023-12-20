@@ -45,9 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $visits = array("Día 1", "Día 10", "Día 30", "Mes 3", "Mes 6", "Mes 9", "Mes 12", "Mes 18");
           $visit_date = NULL;
           $comments = '';
+          $notes = '';
           foreach ($visits as $visit_type) {
-            $sql2 = $conn->prepare("INSERT INTO enf_patient_visit_history (patient_id,visit_type,visit_date,comments) VALUES (?, ?, ?, ?)");
-            $sql2->bind_param("isss", $procedure_id, $visit_type, $visit_date, $comments);
+            $sql2 = $conn->prepare("INSERT INTO enf_patient_visit_history (patient_id,visit_type,visit_date,comments,notes) VALUES (?, ?, ?, ?, ?)");
+            $sql2->bind_param("issss", $procedure_id, $visit_type, $visit_date, $comments, $notes);
 
             // Continuar con la ejecución de $sql2
             if ($sql2->execute() !== TRUE) {

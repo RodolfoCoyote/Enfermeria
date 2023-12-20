@@ -10081,13 +10081,12 @@ html[data-bs-theme="dark"] .is-invalid ~ .invalid-feedback,
 html[data-bs-theme="dark"] .is-invalid ~ .invalid-tooltip {
   display: block;
 }
-
-tr:hover {
-  cursor: pointer;
-  transform: scale(1.019);
-  transition: transform 0.3s ease;
+#table1 tr:hover{
+  transition: background-color 0.3s ease;
 }
-
+#table1 tr:hover {
+  background-color: #e0ac44 !important;
+}
 /* General button style */
 .btn-options {
   border: none !important;

@@ -17,14 +17,15 @@ if (!isset($_SESSION['user_name'])) {
   <title>Procedimientos | Enfermería RDI</title>
 
   <link rel="icon" type="image/x-icon" href="favicon.png">
-
-  <link rel="stylesheet" href="assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
-
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="./assets/extensions/font-awesome/css/font-awesome.css" />
-  <style>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
 
+  <style>
+    #table1 thead tr th {
+      text-align: center !important;
+    }
   </style>
 </head>
 
@@ -85,22 +86,24 @@ if (!isset($_SESSION['user_name'])) {
       <div id="main-content">
         <h3>Lista de procedimientos</h3>
         <!-- Basic Tables start -->
-        <div class="table-responsive">
-          <table class="table table-striped" id="table1">
-            <thead>
-              <tr>
-                <th>Fecha Proc.</th>
-                <th>Exp. No.</th>
-                <th>Paciente</th>
-                <th>Injerto</th>
-                <th>Sala</th>
-                <th>Especialista</th>
-                <th>Observaciones</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <!-- Basic Tables end -->
+        <div class="card-body">
+
+          <div class="table-responsive">
+            <table class="table table-striped" id="table1">
+              <thead>
+                <tr>
+                  <th>Fecha Proc.</th>
+                  <th>Exp. No.</th>
+                  <th>Paciente</th>
+                  <th>Injerto</th>
+                  <th>Sala</th>
+                  <th>Especialista</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div> <!-- Basic Tables end -->
       </div>
 
       <?php require_once "templates/footer.php" ?>
@@ -140,52 +143,62 @@ if (!isset($_SESSION['user_name'])) {
           </button>
         </div>
         <div class="modal-body">
-          <form action="scripts/actualizar_proced.php" method="POST">
+          <form action="scripts/update/procedure.php" method="POST" id="formUpdateProcedure">
             <input id="id_p" name="id_p" type="hidden" placeholder="Número de Expediente" class="form-control" />
-            <label for="num_expediente">Núm. de Expediente</label>
-            <div class="form-group">
-              <input id="num_expediente" name="num_expediente" type="text" placeholder="Número de Expediente" class="form-control" readonly disabled />
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="num_expediente">Núm. de Expediente</label>
+                  <input id="num_expediente" name="num_expediente" type="text" placeholder="Número de Expediente" class="form-control" readonly />
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="clinic">Clínica</label>
+                  <input id="clinic" name="clinic" type="text" placeholder="Clínica" class="form-control" readonly />
+                </div>
+              </div>
             </div>
             <label for="nombre">Nombre del paciente</label>
             <div class="form-group">
               <input id="nombre_paciente" name="nombre_paciente" type="Nombre del fármaco" placeholder="Nombre del Paciente" class="form-control" />
             </div>
-            <div class="form-group">
-              <label for="basicInput">Tipo de Injerto</label>
-              <select class="form-control" id="tipo_injerto" name="tipo_injerto" required>
-                <option value=0 disabled readonly>Selecciona</option>
-                <option value=1>Capilar</option>
-                <option value=2>Barba</option>
-                <option value=3>Ambos</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="gramaje">Sala</label>
-              <select class="form-control" id="sala" name="sala" required>
-                <option value=0 disabled readonly>Selecciona</option>
-                <option value=1>1</option>
-                <option value=2>2</option>
-                <option value=3>3</option>
-              </select>
+            <div class="row">
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="basicInput">Tipo de Injerto</label>
+                  <select class="form-control" id="tipo_injerto" name="tipo_injerto" required>
+                    <option value=0 disabled readonly>Selecciona</option>
+                    <option value=1>Capilar</option>
+                    <option value=2>Barba</option>
+                    <option value=3>Ambos</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <label for="gramaje">Sala</label>
+                  <select class="form-control" id="sala" name="sala" required>
+                    <option value=0 disabled readonly>Selecciona</option>
+                    <option value=1>1</option>
+                    <option value=2>2</option>
+                    <option value=3>3</option>
+                  </select>
+                </div>
+              </div>
             </div>
             <div class="form-group">
               <label for="gramaje">Especialista</label>
               <select class="form-control" id="especialista" name="especialista" required>
-                <option value=0 disabled readonly>Selecciona</option>
-                <option value="Dr. Alejandro Santana">Dr. Alejandro Santana</option>
-                <option value="Luis">Luis</option>
-                <option value="Hector">Hector</option>
-                <option value="Xochitl">Xochitl</option>
               </select>
             </div>
-
             <div class="form-group">
               <label>Observaciones</label>
-              <textarea id="observaciones" name="observaciones" placeholder="" class="form-control"></textarea>
+              <textarea id="observaciones" name="observaciones" placeholder="" class="form-control" rows=4></textarea>
             </div>
             <label for="cantidad_sala">Fecha de procedimiento</label>
             <div class="form-group">
-              <input id="fecha_proced" name="fecha_proced" type="text" placeholder="" class="form-control" />
+              <input id="fecha_proced" name="fecha_proced" type="date" placeholder="" class="form-control" />
             </div>
         </div>
         <div class="modal-footer">
@@ -193,7 +206,7 @@ if (!isset($_SESSION['user_name'])) {
             <i class="bx bx-x d-block d-sm-none"></i>
             <span class="d-sm-block">Cerrar</span>
           </button>
-          <button type="submit" class="btn btn-success ms-1" data-bs-dismiss="modal">
+          <button type="submit" class="btn btn-success ms-1">
             <i class="bx bx-check d-block d-sm-none"></i>
             <span class="d-sm-block">Actualizar</span>
           </button>
@@ -207,35 +220,85 @@ if (!isset($_SESSION['user_name'])) {
   <script src="assets/static/js/components/dark.js"></script>
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="assets/compiled/js/app.js"></script>
-  <script src="assets/extensions/jquery/jquery.min.js"></script>
-  <script src="https://cdn.datatables.net/v/bs5/dt-1.12.1/datatables.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+
+
   <script>
-    let jquery_datatable = $("#table1").DataTable({
-      ajax: 'scripts/load/procedures.php',
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
-      },
-      responsive: true,
-      scrollX: true,
-      order: [
-        [1, 'desc']
-      ],
+    $(document).ready(function() {
+      /* =============== DATATABLE Start =============== */
+      let jquery_datatable = $("#table1").DataTable({
+        ajax: 'scripts/load/procedures.php',
+        autoWidth: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+        },
+
+        scrollX: true,
+        order: [
+          [1, 'desc']
+        ],
+      });
+      const setTableColor = () => {
+        document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {
+          dt.classList.add('pagination-primary')
+        })
+      }
+      setTableColor()
+      jquery_datatable.on('draw', setTableColor)
+      /* =============== DATATABLE End =============== */
+
+      $(document).on("click", ".single_procedure", function(e) {
+        e.preventDefault()
+        let procedure_id = $(this).data('procedureid');
+        $("#btnInfo,#btnMed,#btnPhoto,#btnRev").data('procedureid', procedure_id);
+        $("#optionsModal").modal("show");
+      });
+
+      $("#formUpdateProcedure").submit(function(e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+        let method = $(this).attr('method');
+        let url = $(this).attr('action');
+        console.log(formData);
+        $.ajax({
+          method: method,
+          url: url,
+          data: formData,
+          dataType: 'json'
+        }).done(function(response) {
+          if (response.success) {
+
+            Swal.fire({
+              title: 'Listo!',
+              text: 'Procedimiento actualizado...',
+              icon: 'success',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false
+            }).then((result) => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: response.message,
+              icon: 'error',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false // No muestra el botón de confirmación
+            });
+          }
+        }).fail(function(response) {
+          console.log(response);
+        });
+      });
     });
 
-    const setTableColor = () => {
-      document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {
-        dt.classList.add('pagination-primary')
-      })
-    }
-    setTableColor()
-    jquery_datatable.on('draw', setTableColor)
 
-    $(document).on("click", ".single_procedure", function(e) {
-      e.preventDefault()
-      let procedure_id = $(this).data('procedureid');
-      $("#btnInfo,#btnMed,#btnPhoto,#btnRev").data('procedureid', procedure_id);
-      $("#optionsModal").modal("show");
-    });
     $(document).on("click", "#btnInfo", function() {
       $("#optionsModal").modal("hide");
       let procedure_id = $(this).data('procedureid');
@@ -246,30 +309,100 @@ if (!isset($_SESSION['user_name'])) {
         data: {
           procedure_id: procedure_id
         },
-        success: function(response) {
-          let data = JSON.parse(response);
-          console.log(data);
-          $("#id_p").val(data['id']);
-          $("#num_expediente").val(data['num_med_record']);
-          $("#nombre_paciente").val(data['name']);
-          $("#tipo_injerto").val(data['type']);
-          $("#sala").val(data['room']);
-          $("#especialista").val(data['specialist']);
-          $("#observaciones").val(data['notes']);
-          $("#fecha_proced").val(data['procedure_date']);
+        dataType: 'json',
+        success: function(data) {
+          let especialistas = [{
+              valor: 'Luis Moreno',
+              texto: 'Luis Moreno',
+              clinic: 1
+            },
+            {
+              valor: 'Xóchitl Lagunas',
+              texto: 'Xóchitl Lagunas',
+              clinic: 1
+            },
+            {
+              valor: 'Héctor Carmona',
+              texto: 'Héctor Carmona',
+              clinic: 1
+            },
+            {
+              valor: 'Dra. Fernanda Bojorquez',
+              texto: 'Dra. Fernanda Bojorquez',
+              clinic: 2
+            },
+            {
+              valor: 'Antonio Pérez',
+              texto: 'Antonio Pérez',
+              clinic: 2
+            },
+            {
+              valor: 'Javier Romo',
+              texto: 'Javier Romo',
+              clinic: 2
+            },
+            {
+              valor: 'Laura Herrera',
+              texto: 'Laura Herrera',
+              clinic: 2
+            },
+            {
+              valor: 'Dra. Oriana Aguilar',
+              texto: 'Dra. Oriana Aguilar',
+              clinic: 3
+            },
+            {
+              valor: 'Itzel Rodríguez',
+              texto: 'Itzel Rodríguez',
+              clinic: 3
+            },
+            {
+              valor: 'Belén',
+              texto: 'Belén',
+              clinic: 4
+            }
+          ];
+
+          let clinics = ["CDMX", "Culiacán", "Mazatlán", "Tijuana"];
+
+          $("#id_p").val(data.id);
+          $("#num_expediente").val(data.num_med_record);
+          $("#clinic").val(clinics[data.clinic - 1]);
+          $("#nombre_paciente").val(data.name);
+          $("#tipo_injerto").val(data.type);
+          $("#sala").val(data.room);
+          $("#observaciones").val(data.notes);
+          $("#fecha_proced").val(data.procedure_date);
+
+          // Vaciar el select
+          $('#especialista').empty();
+
+          $('#especialista').append($('<option>', {
+            value: 'Dr. Alejandro Santana',
+            text: 'Dr. Alejandro Santana'
+          }));
+          // Añadir cada nueva opción al select
+          $.each(especialistas, function(i, opcion) {
+            if (data.clinic == opcion.clinic) {
+              $('#especialista').append($('<option>', {
+                value: opcion.valor,
+                text: opcion.texto
+              }));
+            }
+          });
+          $("#especialista").val(data.specialist);
         }
       });
       $('#inlineForm').modal('show');
     });
-
+    $(document).on("click", "#btnMed", function() {
+      const procedure_id = $(this).data('procedureid');
+      window.location.href = "procedure_medicines.php?id=" + procedure_id;
+    });
     $(document).on("click", "#btnPhoto", function() {
       let procedure_id = $(this).data('procedureid');
       window.location.href = "procedure_photos.php?id=" + procedure_id;
 
-    });
-    $(document).on("click", "#btnMed", function() {
-      const procedure_id = $(this).data('procedureid');
-      window.location.href = "procedure_medicines.php?id=" + procedure_id;
     });
     $(document).on("click", "#btnRev", function() {
       const procedure_id = $(this).data('procedureid');
