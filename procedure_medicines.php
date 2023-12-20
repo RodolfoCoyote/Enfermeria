@@ -18,42 +18,15 @@ if (!isset($_SESSION['user_name'])) {
   <title>Inicio | Enfermería | RDI</title>
   <!-- <link rel="icon" type="image/x-icon" href="favicon.png"> -->
 
-  <link rel="stylesheet" href="assets/extensions/datatables.net-bs5/css/dataTables.bootstrap5.min.css" />
 
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="./assets/extensions/font-awesome/css/font-awesome.css" />
-
-  <link href="//cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="../Pruebas-Web-RDI/auto-complete-box/style.css">
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.css'>
   <style>
     .card-body {
       color: var(--bs-body-color);
-    }
-
-    .counter {
-      width: 70px;
-      border-radius: 0px !important;
-      text-align: center;
-      background: transparent;
-      border: none;
-      color: var(--bs-body-color);
-    }
-
-    .up_count {
-      margin-left: -4px;
-      border-top-left-radius: 0px;
-      border-bottom-left-radius: 0px;
-    }
-
-    .down_count {
-      margin-right: -4px;
-      border-top-right-radius: 0px;
-      border-bottom-right-radius: 0px;
-    }
-
-    .dataTables_length {
-      display: none !important;
     }
   </style>
 </head>
@@ -160,15 +133,27 @@ if (!isset($_SESSION['user_name'])) {
             </div>
           </div>
           <div class="row">
-            <div class="col-8 mx-auto text-center">
-              <h4>Escribe el medicamento suministrado</h4>
+            <div class="col-lg-5 col-xs-12 mx-auto text-center">
+              <h4>Medicamento suministrado</h4>
               <div class="container">
                 <div class="search-bar">
-                  <input id="inputTxt" type="text" placeholder="Search ...">
-                  <i class="bi bi-search"></i>
+                  <input id="inputTxt" type="text" placeholder="Buscar ...">
                 </div>
                 <div class="list-group" id="list-medicines" style="display:none;">
                 </div>
+              </div>
+            </div>
+          </div>
+          <div class="container mt-4">
+            <div class="row">
+              <div class="col-12 col-md-5 mx-auto text-center">
+                <h6>Medicamentos Anteriores</h6>
+                <ul class=""> //list-group
+                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Alprazolam Tableta 30Mg
+                    <span class="badge bg-primary">10</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
@@ -188,6 +173,54 @@ if (!isset($_SESSION['user_name'])) {
       </footer>
     </div>
   </div>
+
+  <div class="modal fade text-left" id="medicineDataModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <i data-feather="x"></i>
+          </button>
+        </div>
+        <form method="POST" id="formMedicineModal">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12">
+                <input type="text" id="form_type" name="form_type">
+                <input type="text" id="procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
+                <input type="text" id="medicine_id" name="medicine_id" value="">
+
+                <div class="form-group">
+                  <label for="hour">Hora en que se suministró:</label>
+                  <input type="text" class="form-control" name="hour" id="hour" required>
+                </div>
+                <div class="form-group">
+                  <label for="hour">Cantidad suministrada:</label>
+                  <input type="number" class="form-control" name="qty" id="qty" required>
+                </div>
+                <div class="form-group">
+                  <label for="hour">Comentarios:</label>
+                  <textarea class="form-control" name="comments" id="comments" cols=3></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+              <i class="bx bx-x d-block d-sm-none"></i>
+              <span class="d-sm-block">Cerrar</span>
+            </button>
+            <button type="submit" class="btn btn-success ms-1">
+              <i class="bx bx-check d-block d-sm-none"></i>
+              <span class="d-sm-block">Agregar</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
   <script src="assets/static/js/initTheme.js"></script>
@@ -195,119 +228,206 @@ if (!isset($_SESSION['user_name'])) {
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="assets/compiled/js/app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="//cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.js'></script>
   <script type="text/javascript">
     $(document).ready(function() {
-      let choices = [
-        "Ketorolaco sublingual Tableta 30 mg",
-        "Ketorolaco IM/IV Ampolleta 30 mg/1 ml",
-        "Ketorolaco Tableta 10 mg",
-        "Dimenhidrinato Cápsula 50 mg",
-        "Captopril Tableta 25 mg",
-        "Carbamazepina Tableta 200 mg",
-        "Lancetas Unidad",
-        "Paracetamol Tableta 650 mg",
-        "Paracetamol Tableta 500 mg",
-        "Furosemida Tableta 40 mg",
-        "Ondansetrón Tableta 8 mg",
-      ];
-      let a = document;
-      let list_group = a.querySelector(".list-group");
 
-      function ListItemGenerator() {
-        if (!inputTxt.value) {
-          inputTxt.parentElement.classList.remove("active");
-          list_group.style.display = "none";
-        } else {
-          inputTxt.parentElement.classList.add("active");
-          list_group.style.display = "block";
+      $("#hour").timeDropper({
+        format: 'hh:mm A',
+        meridians: true,
+        setCurrentTime: true,
+        primaryColor: "#e0ac44",
+        borderColor: "#e0ac44",
+      });
 
-          let SearchResults = choices.filter(function(choice) {
-            return choice.toLowerCase().startsWith(inputTxt.value.toLowerCase());
-          });
+      let choices = [];
 
-          CreatingList(SearchResults);
+      $.ajax({
+        method: 'POST',
+        url: 'scripts/load/medicines.php',
+        dataType: 'json'
+      }).done(function(response) {
 
-          function CreatingList(Words) {
-            let createdList = Words.map(function(word) {
-              return "<li>" + word + "</li>";
+        $.each(response.data, function(index, value) {
+          let medicine_id = value[0];
+          let medicine_data = `${value[1]} ${value[2]} ${value[3]}`;
+          choices.push([medicine_id, medicine_data]);
+
+        });
+        console.log(choices)
+        let a = document;
+        let list_group = a.querySelector(".list-group");
+
+        function ListItemGenerator() {
+          if (!inputTxt.value) {
+            inputTxt.parentElement.classList.remove("active");
+            list_group.style.display = "none";
+          } else {
+            inputTxt.parentElement.classList.add("active");
+            list_group.style.display = "block";
+
+            let SearchResults = choices.filter(function(choice) {
+              return choice[1].toLowerCase().startsWith(inputTxt.value.toLowerCase());
             });
-            let CustomListItem;
-            if (!CreatingList.length) {
-              CustomListItem = "<li>" + inputTxt.value + "</li>";
-            } else {
-              CustomListItem = createdList.join("");
+
+            CreatingList(SearchResults);
+
+            function CreatingList(Words) {
+              let createdList = Words.map(function(word) {
+                return "<li data-medicineid='" + word[0] + "'>" + word[1] + "</li>";
+              });
+              let CustomListItem;
+              if (!CreatingList.length) {
+                CustomListItem = "<li>" + inputTxt.value + "</li>";
+              } else {
+                CustomListItem = createdList.join("");
+              }
+              list_group.innerHTML = CustomListItem;
+              CompleteText();
             }
-            list_group.innerHTML = CustomListItem;
-            CompleteText();
+          }
+
+          function CompleteText() {
+            all_list_items = list_group.querySelectorAll("li");
+            all_list_items.forEach(function(list) {
+              list.addEventListener("click", function(e) {
+                inputTxt.value = e.target.textContent;
+                list_group.style.display = "none";
+              });
+            });
           }
         }
 
-        function CompleteText() {
-          all_list_items = list_group.querySelectorAll("li");
-          all_list_items.forEach(function(list) {
-            list.addEventListener("click", function(e) {
-              inputTxt.value = e.target.textContent;
-              list_group.style.display = "none";
+        inputTxt.addEventListener("keyup", ListItemGenerator);
+      }).fail(function(response) {
+        console.log(response);
+      });
+
+      $.ajax({
+        method: 'POST',
+        url: 'scripts/load/medicines_procedure.php',
+        dataType: 'json'
+      }).done(function(response) {
+
+        $.each(response.data, function(index, value) {
+          let medicine_id = value[0];
+          let medicine_data = `${value[1]} ${value[2]} ${value[3]}`;
+          choices.push([medicine_id, medicine_data]);
+
+        });
+        console.log(choices)
+        let a = document;
+        let list_group = a.querySelector(".list-group");
+
+        function ListItemGenerator() {
+          if (!inputTxt.value) {
+            inputTxt.parentElement.classList.remove("active");
+            list_group.style.display = "none";
+          } else {
+            inputTxt.parentElement.classList.add("active");
+            list_group.style.display = "block";
+
+            let SearchResults = choices.filter(function(choice) {
+              return choice[1].toLowerCase().startsWith(inputTxt.value.toLowerCase());
             });
-          });
-        }
-      }
 
-      inputTxt.addEventListener("keyup", ListItemGenerator);
-      $(document).ready(function() {
-        var table = $("#tabla_medicamentos").DataTable({
-          ajax: 'scripts/load/medicines_per_procedure.php?id=<?= $_GET['id']; ?>',
-          language: {
-            url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
-          },
-          pageLength: -1,
-          lengthMenu: [
-            [-1],
-            ['Todos']
-          ],
-          info: false, // Desactiva el mensaje "Mostrando X a Y de Z registros"
-          paging: false, // Desactiva la paginación
-        });
+            CreatingList(SearchResults);
 
-        $('.counter').click(function() {
-          $(this).focus().select();
-        });
-
-        $("#enviarMed").click(function() {
-          let proced_id = <?= $_GET['id']; ?>;
-
-          var map = {};
-          $(".counter").each(function() {
-            map[$(this).attr("id")] = $(this).val();
-          });
-
-
-          $.ajax({
-            type: "POST",
-            url: 'scripts/subir_farmacos_proced.php',
-            data: {
-              map: map,
-              proced_id: proced_id
-            },
-            beforeSend: function() {
-              // setting a timeout
-              $("body").css('filter', 'blur(4px)');
-            },
-            success: function() {
-              setTimeout(() => {
-                $("#alertupdate").css('display', 'block');
-                $("body").css('filter', 'blur(0px)');
-                $(window).scrollTop(0);
-
-              }, 600);
-
+            function CreatingList(Words) {
+              let createdList = Words.map(function(word) {
+                return "<li data-medicineid='" + word[0] + "'>" + word[1] + "</li>";
+              });
+              let CustomListItem;
+              if (!CreatingList.length) {
+                CustomListItem = "<li>" + inputTxt.value + "</li>";
+              } else {
+                CustomListItem = createdList.join("");
+              }
+              list_group.innerHTML = CustomListItem;
+              CompleteText();
             }
+          }
+
+          function CompleteText() {
+            all_list_items = list_group.querySelectorAll("li");
+            all_list_items.forEach(function(list) {
+              list.addEventListener("click", function(e) {
+                inputTxt.value = e.target.textContent;
+                list_group.style.display = "none";
+              });
+            });
+          }
+        }
+
+        inputTxt.addEventListener("keyup", ListItemGenerator);
+      }).fail(function(response) {
+        console.log(response);
+      });
+
+      $('#medicineDataModal').on('hidden.bs.modal', function(e) {
+        // Código a ejecutar cuando la modal se cierra
+        $("#inputTxt,#medicine_id").val('');
+      });
+
+      $("#formMedicineModal").submit(function(e) {
+        e.preventDefault();
+        let method = $(this).attr('method');
+        let form_type = $("#form_type").val();
+        let url = `scripts/${form_type}/medicine_procedure.php`;
+        let formData = $(this).serialize();
+        alert(url);
+
+        $.ajax({
+          method: method,
+          url: url,
+          data: formData,
+          dataType: 'json'
+        }).done(function(response) {
+          if (response.success) {
+
+            Swal.fire({
+              title: 'Listo!',
+              text: response.message,
+              icon: 'success',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false
+            }).then((result) => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: response.message,
+              icon: 'error',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false // No muestra el botón de confirmación
+            });
+          }
+        }).fail(function(response) {
+          console.log(response);
+          Swal.fire({
+            title: 'Error',
+            text: 'Contacta a administración',
+            icon: 'error',
+            timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+            timerProgressBar: true, // Muestra una barra de progreso
+            showConfirmButton: false // No muestra el botón de confirmación
           });
         });
       });
+    });
 
-      $(document).on("click", "#list-medicines li", function() {});
+
+    $(document).on("click", "#list-medicines li", function() {
+      let medicine_id = $(this).data('medicineid');
+
+      $("#medicine_id").val(medicine_id);
+      $("#form_type").val("add");
+      $("#medicineDataModal").modal("show");
     });
   </script>
 </body>

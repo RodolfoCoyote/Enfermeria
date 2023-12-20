@@ -56,22 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
           }
 
-          $quantity = 0;
-
-          $sql = "SELECT * FROM enf_medicines;";
-          $query = $conn->query($sql);
-
-          while ($row = $query->fetch_assoc()) {
-            $medicine_id = $row['id'];
-            $sql2 = $conn->prepare("INSERT INTO enf_used_medicines (medicine_id, procedure_id, quantity, date, updated_by) VALUES (?, ?, ?, ?, ?);");
-            $sql2->bind_param("iiisi", $medicine_id, $procedure_id, $quantity, $procedure_date, $created_by);
-            if ($sql2->execute() === TRUE) {
-              $success = true;
-            } else {
-              $success = false;
-            }
-          }
-
           if ($success) {
             echo json_encode([
               'success' => $success,
