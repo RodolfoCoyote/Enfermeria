@@ -10,10 +10,10 @@ require_once '../connection_db.php';
 $data_array = array();
 $user_clinic = $_SESSION['user_clinic'];
 // SQL para obtener los datos
-$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,notes,created_by FROM enf_procedures WHERE clinic = $user_clinic;";
+$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,SUBSTRING(notes, 1, 100) notes,created_by FROM enf_procedures WHERE clinic = $user_clinic;";
 
 if ($user_clinic == 5) {
-	$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,notes,created_by FROM enf_procedures;";
+	$sql = "SELECT id,num_med_record,name,type,room,specialist,DATE_FORMAT(procedure_date, '%d/%m/%Y') procedure_date,SUBSTRING(notes, 1, 100) notes,created_by FROM enf_procedures;";
 }
 
 // Ejeuctar el SQL
@@ -37,6 +37,7 @@ while ($data = $query->fetch_object()) {
 
 	$link_name = '<a data-procedureid="' . $data->id . '" data-proc_record="' . $data->num_med_record . '" data-name="' . $data->name . '" href="#" type="button" class="single_procedure">' . $data->name . '</a>';
 
+	$notes = $data->notes . "...";
 	$data_array[] = array(
 		$data->procedure_date,
 		$data->num_med_record,
@@ -44,7 +45,7 @@ while ($data = $query->fetch_object()) {
 		$type,
 		$data->room,
 		$data->specialist,
-		$data->notes
+		$notes
 	);
 }
 // crear un array con el array de los datos, importante que esten dentro de : data

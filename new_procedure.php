@@ -232,8 +232,12 @@ if (!isset($_SESSION['user_name'])) {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
   <script>
     $(document).ready(function() {
+
       $("#formNuevoProced").submit(function(e) {
         e.preventDefault();
+        $("#btnAddProc").attr('disabled', 'true');
+        $("body").css('filter', 'blur(4px)');
+
 
         let datosProced = $(this).serialize();
 
@@ -265,6 +269,9 @@ if (!isset($_SESSION['user_name'])) {
               timerProgressBar: true, // Muestra una barra de progreso
               showConfirmButton: false // No muestra el botón de confirmación
             });
+            $("#btnAddProc").removeAttr('disabled');
+            $("body").css('filter', '');
+
           }
         }).fail(function(response) {
           console.log(response);

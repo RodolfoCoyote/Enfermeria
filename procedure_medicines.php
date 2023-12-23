@@ -22,8 +22,8 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="./assets/extensions/font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="../Pruebas-Web-RDI/auto-complete-box/style.css">
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.css'>
+  <link rel="stylesheet" href="assets/css/style.css">
   <style>
     .card-body {
       color: var(--bs-body-color);
@@ -41,7 +41,6 @@ if (!isset($_SESSION['user_name'])) {
             <a href="#" class="burger-btn d-block">
               <i class="bi bi-justify fs-3"></i>
             </a>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -90,7 +89,7 @@ if (!isset($_SESSION['user_name'])) {
         <div class="page-heading">
           <div class="row">
             <div class="text-center col-12 col-xs-12 order-md-1 order-last mx-auto">
-              <h5>Medicamentos suministrados al paciente.</h5>
+              <h3>Insumos utilizados en procedimiento.</h3>
               <div class="card">
                 <div class="card-body">
                   <?php
@@ -130,33 +129,68 @@ if (!isset($_SESSION['user_name'])) {
                   ?>
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-5 col-xs-12 mx-auto text-center">
-              <h4>Medicamento suministrado</h4>
-              <div class="container">
-                <div class="search-bar">
-                  <input id="inputTxt" type="text" placeholder="Buscar ...">
+              <div class="card">
+                <div class="card-body mx-auto">
+                  <div class="tabs">
+                    <a data-type="divMedicines" class="tabs__button">
+                      Medicamentos
+                    </a>
+                    <a data-type="divSupplies" class="tabs__button">
+                      Insumos
+                    </a>
+                  </div>
                 </div>
-                <div class="list-group" id="list-medicines" style="display:none;">
+                <div id="divMedicines" style="display:none;">
+                  <div class="row">
+                    <div class="col-lg-6 col-xs-12 mx-auto text-center">
+                      <h4>Medicamento suministrado</h4>
+                      <div class="container">
+                        <div class="search-bar">
+                          <input id="inputTxt" type="text" placeholder="Buscar ...">
+                        </div>
+                        <div class="list-group" id="list-medicines" style="display:none;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container mt-4">
+                    <div class="row">
+                      <div class="col-12 col-md-5 mx-auto text-center">
+                        <h6>Medicamentos Suministrados Anteriormente</h6>
+
+                        <ol id="olMedicinesUsed" class="list-group">
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div id="divSupplies" style="display:none;">
+                  <div class="row">
+                    <div class="col-lg-6 col-xs-12 mx-auto text-center">
+                      <h4>Insumo utilizado</h4>
+                      <div class="container">
+                        <div class="search-bar">
+                          <input id="inputTxt2" type="text" placeholder="Buscar ...">
+                        </div>
+                        <div class="list-group" id="list-supplies" style="display:none;">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="container mt-4">
+                    <div class="row">
+                      <div class="col-12 col-md-5 mx-auto text-center">
+                        <h6>Insumos utilizados anteriormente</h6>
+                        <ol id="olSuppliesUsed" class="list-group">
+                        </ol>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="container mt-4">
-            <div class="row">
-              <div class="col-12 col-md-5 mx-auto text-center">
-                <h6>Medicamentos Anteriores</h6>
-                <ul class=""> //list-group
-                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                    Alprazolam Tableta 30Mg
-                    <span class="badge bg-primary">10</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
       <footer>
@@ -186,21 +220,24 @@ if (!isset($_SESSION['user_name'])) {
           <div class="modal-body">
             <div class="row">
               <div class="col-12">
-                <input type="text" id="form_type" name="form_type">
-                <input type="text" id="procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
-                <input type="text" id="medicine_id" name="medicine_id" value="">
-
+                <input type="hidden" id="form_type" name="form_type">
+                <input type="hidden" id="procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
+                <input type="hidden" id="medicine_id" name="medicine_id" value="">
+                <div class="form-group">
+                  <label for="hour">Nombre del medicamento:</label>
+                  <input type="text" class="form-control" name="medicine_name" id="medicine_name" disabled required>
+                </div>
                 <div class="form-group">
                   <label for="hour">Hora en que se suministró:</label>
                   <input type="text" class="form-control" name="hour" id="hour" required>
                 </div>
                 <div class="form-group">
                   <label for="hour">Cantidad suministrada:</label>
-                  <input type="number" class="form-control" name="qty" id="qty" required>
+                  <input type="number" class="form-control" name="qty" id="qty" min=0 required>
                 </div>
                 <div class="form-group">
                   <label for="hour">Comentarios:</label>
-                  <textarea class="form-control" name="comments" id="comments" cols=3></textarea>
+                  <textarea class="form-control" name="comments" id="comments" cols=4></textarea>
                 </div>
               </div>
             </div>
@@ -210,9 +247,13 @@ if (!isset($_SESSION['user_name'])) {
               <i class="bx bx-x d-block d-sm-none"></i>
               <span class="d-sm-block">Cerrar</span>
             </button>
+            <button type="button" id="btnDelMedicine" class="btn btn-danger ms-1">
+              <i class="bx bx-check d-block d-sm-none"></i>
+              <span class="d-sm-block">Eliminar</span>
+            </button>
             <button type="submit" class="btn btn-success ms-1">
               <i class="bx bx-check d-block d-sm-none"></i>
-              <span class="d-sm-block">Agregar</span>
+              <span class="d-sm-block">Guardar</span>
             </button>
           </div>
         </form>
@@ -220,7 +261,54 @@ if (!isset($_SESSION['user_name'])) {
     </div>
   </div>
 
-
+  <div class="modal fade text-left" id="supplyDataModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel33" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <i data-feather="x"></i>
+          </button>
+        </div>
+        <form method="POST" id="formSupplyModal">
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-12">
+                <input type="text" id="supply_form_type" name="form_type">
+                <input type="text" id="supply_procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
+                <input type="text" id="supply_id" name="supply_id" value="">
+                <div class="form-group">
+                  <label for="hour">Nombre del Insumo:</label>
+                  <input type="text" class="form-control" name="name" id="supply_name" disabled>
+                </div>
+                <div class="form-group">
+                  <label for="hour">Cantidad suministrada:</label>
+                  <input type="number" class="form-control" name="qty" id="supply_qty" min=0 required>
+                </div>
+                <div class="form-group">
+                  <label for="hour">Comentarios:</label>
+                  <textarea class="form-control" name="comments" id="supply_comments" cols=4></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-light-secondary" data-bs-dismiss="modal">
+              <i class="bx bx-x d-block d-sm-none"></i>
+              <span class="d-sm-block">Cerrar</span>
+            </button>
+            <button type="button" id="btnDelSupply" class="btn btn-danger">
+              <i class="bx bx-x d-block d-sm-none"></i>
+              <span class="d-sm-block">Eliminar</span>
+            </button>
+            <button type="submit" class="btn btn-success ms-1">
+              <i class="bx bx-check d-block d-sm-none"></i>
+              <span class="d-sm-block">Guardar</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
   <script src="assets/static/js/initTheme.js"></script>
@@ -231,24 +319,23 @@ if (!isset($_SESSION['user_name'])) {
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js'></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/timedropper/1.0/timedropper.js'></script>
+  <script src="assets/js/scripts.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-
       $("#hour").timeDropper({
         format: 'hh:mm A',
         meridians: true,
-        setCurrentTime: true,
         primaryColor: "#e0ac44",
         borderColor: "#e0ac44",
       });
 
-      let choices = [];
 
       $.ajax({
         method: 'POST',
         url: 'scripts/load/medicines.php',
         dataType: 'json'
       }).done(function(response) {
+        let choices = [];
 
         $.each(response.data, function(index, value) {
           let medicine_id = value[0];
@@ -258,7 +345,7 @@ if (!isset($_SESSION['user_name'])) {
         });
         console.log(choices)
         let a = document;
-        let list_group = a.querySelector(".list-group");
+        let list_group = a.querySelector("#list-medicines");
 
         function ListItemGenerator() {
           if (!inputTxt.value) {
@@ -305,63 +392,114 @@ if (!isset($_SESSION['user_name'])) {
         console.log(response);
       });
 
+
       $.ajax({
         method: 'POST',
-        url: 'scripts/load/medicines_procedure.php',
+        url: 'scripts/load/supplies.php',
         dataType: 'json'
       }).done(function(response) {
+        let choices = [];
 
         $.each(response.data, function(index, value) {
-          let medicine_id = value[0];
-          let medicine_data = `${value[1]} ${value[2]} ${value[3]}`;
-          choices.push([medicine_id, medicine_data]);
-
+          let supply_id = value[0];
+          let supply_data = value[1];
+          choices.push([supply_id, supply_data]);
         });
         console.log(choices)
         let a = document;
-        let list_group = a.querySelector(".list-group");
+        let list_group_2 = a.querySelector("#list-supplies");
 
         function ListItemGenerator() {
-          if (!inputTxt.value) {
-            inputTxt.parentElement.classList.remove("active");
-            list_group.style.display = "none";
+          if (!inputTxt2.value) {
+            inputTxt2.parentElement.classList.remove("active");
+            list_group_2.style.display = "none";
           } else {
-            inputTxt.parentElement.classList.add("active");
-            list_group.style.display = "block";
+            inputTxt2.parentElement.classList.add("active");
+            list_group_2.style.display = "block";
 
             let SearchResults = choices.filter(function(choice) {
-              return choice[1].toLowerCase().startsWith(inputTxt.value.toLowerCase());
+              return choice[1].toLowerCase().startsWith(inputTxt2.value.toLowerCase());
             });
 
             CreatingList(SearchResults);
 
             function CreatingList(Words) {
               let createdList = Words.map(function(word) {
-                return "<li data-medicineid='" + word[0] + "'>" + word[1] + "</li>";
+                return "<li data-supplyid='" + word[0] + "'>" + word[1] + "</li>";
               });
               let CustomListItem;
               if (!CreatingList.length) {
-                CustomListItem = "<li>" + inputTxt.value + "</li>";
+                CustomListItem = "<li>" + inputTxt2.value + "</li>";
               } else {
                 CustomListItem = createdList.join("");
               }
-              list_group.innerHTML = CustomListItem;
+              list_group_2.innerHTML = CustomListItem;
               CompleteText();
             }
           }
 
           function CompleteText() {
-            all_list_items = list_group.querySelectorAll("li");
+            all_list_items = list_group_2.querySelectorAll("li");
             all_list_items.forEach(function(list) {
               list.addEventListener("click", function(e) {
-                inputTxt.value = e.target.textContent;
-                list_group.style.display = "none";
+                inputTxt2.value = e.target.textContent;
+                list_group_2.style.display = "none";
               });
             });
           }
         }
 
-        inputTxt.addEventListener("keyup", ListItemGenerator);
+        inputTxt2.addEventListener("keyup", ListItemGenerator);
+      }).fail(function(response) {
+        console.log(response);
+      });
+
+      let procedure_id = <?= $_GET['id']; ?>;
+
+      $.ajax({
+        method: 'POST',
+        url: 'scripts/load/medicines_procedure.php',
+        data: {
+          procedure_id: procedure_id
+        },
+        dataType: 'json'
+      }).done(function(response) {
+        console.log(response);
+        $.each(response.data, function(index, value) {
+          let medicines = `
+            <li class="limedicine list-group-item d-flex justify-content-between align-items-start" data-medicineid=${value[0]} data-name="${value[4]}" data-qty="${value[1]}" data-time="${value[2]}" data-comments="${value[3]}">
+              <div class="ms-2">
+                <div class="fw-bold">${value[4]} (${value[1]})</div>
+              </div>
+              <span class="badge bg-light rounded-pill">${value[2]}</span>
+            </li>`;
+          $("#olMedicinesUsed").append(medicines);
+        });
+
+      }).fail(function(response) {
+        console.log(response);
+      });
+
+      $.ajax({
+        method: 'POST',
+        url: 'scripts/load/supplies_procedure.php',
+        data: {
+          procedure_id: procedure_id
+        },
+        dataType: 'json'
+      }).done(function(response) {
+        console.log(response);
+        $.each(response.data, function(index, value) {
+          let supplies = `
+            <li class="limedicine list-group-item d-flex justify-content-between align-items-start" data-supplyid=${value[0]} data-name="${value[1]}" data-qty="${value[2]}" data-notes="${value[3]}">
+              <div class="ms-2">
+                <div class="fw-bold">${value[1]}</div>
+              </div>
+              <span class="badge bg-light rounded-pill">${value[2]}</span>
+            </li>`;
+          $("#olSuppliesUsed").append(supplies);
+        });
+
       }).fail(function(response) {
         console.log(response);
       });
@@ -370,15 +508,17 @@ if (!isset($_SESSION['user_name'])) {
         // Código a ejecutar cuando la modal se cierra
         $("#inputTxt,#medicine_id").val('');
       });
+      $('#supplyDataModal').on('hidden.bs.modal', function(e) {
+        // Código a ejecutar cuando la modal se cierra
+        $("#inputTxt2,#supply_id").val('');
+      });
 
-      $("#formMedicineModal").submit(function(e) {
+      $("#formSupplyModal").submit(function(e) {
         e.preventDefault();
         let method = $(this).attr('method');
-        let form_type = $("#form_type").val();
-        let url = `scripts/${form_type}/medicine_procedure.php`;
+        let form_type = $("#supply_form_type").val();
+        let url = `scripts/${form_type}/supply_procedure.php`;
         let formData = $(this).serialize();
-        alert(url);
-
         $.ajax({
           method: method,
           url: url,
@@ -419,15 +559,117 @@ if (!isset($_SESSION['user_name'])) {
           });
         });
       });
+
+      $("#formMedicineModal").submit(function(e) {
+        e.preventDefault();
+        let method = $(this).attr('method');
+        let form_type = $("#form_type").val();
+        let url = `scripts/${form_type}/medicine_procedure.php`;
+        let formData = $(this).serialize();
+        $.ajax({
+          method: method,
+          url: url,
+          data: formData,
+          dataType: 'json'
+        }).done(function(response) {
+          if (response.success) {
+
+            Swal.fire({
+              title: 'Listo!',
+              text: response.message,
+              icon: 'success',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false
+            }).then((result) => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: response.message,
+              icon: 'error',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false // No muestra el botón de confirmación
+            });
+          }
+        }).fail(function(response) {
+          console.log(response);
+          Swal.fire({
+            title: 'Error',
+            text: 'Contacta a administración',
+            icon: 'error',
+            timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+            timerProgressBar: true, // Muestra una barra de progreso
+            showConfirmButton: false // No muestra el botón de confirmación
+          });
+        });
+      });
+
+      $(".tabs__button").click(function(e) {
+        e.preventDefault();
+        $("#divMedicines,#divSupplies").css('display', 'none');
+
+        const tab = "#" + $(this).data('type');
+        $(tab).fadeIn("slow");
+      });
     });
 
 
     $(document).on("click", "#list-medicines li", function() {
       let medicine_id = $(this).data('medicineid');
+      let medicine_name = $(this).text();
 
+      $("#medicine_name").val(medicine_name);
       $("#medicine_id").val(medicine_id);
       $("#form_type").val("add");
+      $("#btnDelMedicine").css('display', 'none');
       $("#medicineDataModal").modal("show");
+    });
+    $(document).on("click", "#list-supplies li", function() {
+      let supply_id = $(this).data('supplyid');
+      let supply_name = $(this).text();
+      $("#supply_name").val(supply_name);
+      $("#supply_id").val(supply_id);
+      $("#supply_form_type").val("add");
+      $("#btnDelSupply").css('display', 'none');
+
+      $("#supplyDataModal").modal("show");
+    });
+    $(document).on("click", "#olMedicinesUsed li", function() {
+      let medicine_id = $(this).data('medicineid');
+      let medicine_name = $(this).data('name');
+      let medicine_qty = $(this).data('qty');
+      let medicine_comments = $(this).data('comments');
+      let medicine_time = $(this).data('time');
+
+      $("#medicine_name").val(medicine_name);
+      $("#medicine_id").val(medicine_id);
+      $("#hour").val(medicine_time);
+      $("#qty").val(medicine_qty);
+      $("#comments").val(medicine_comments);
+
+      $("#form_type").val("update");
+      $("#btnDelMedicine").css('display', 'block');
+
+      $("#medicineDataModal").modal("show");
+    });
+    $(document).on("click", "#olSuppliesUsed li", function() {
+      let supply_id = $(this).data('supplyid');
+      let supply_name = $(this).data('name');
+      let supply_qty = $(this).data('qty');
+      let supply_comments = $(this).data('notes');
+
+      $("#supply_name").val(supply_name);
+      $("#supply_id").val(supply_id);
+      $("#supply_qty").val(supply_qty);
+      $("#supply_comments").val(supply_comments);
+
+      $("#supply_form_type").val("update");
+      $("#btnDelSupply").css('display', 'block');
+
+      $("#supplyDataModal").modal("show");
     });
   </script>
 </body>

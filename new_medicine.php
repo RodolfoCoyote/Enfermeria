@@ -20,6 +20,7 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="stylesheet" href="assets/compiled/css/app.css" />
   <link rel="stylesheet" href="assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
 
@@ -82,7 +83,15 @@ if (!isset($_SESSION['user_name'])) {
           <div class="page-title">
             <div class="row">
               <div class="col-12 col-md-6 order-md-1 order-last">
-                <h3>Agregar nuevo medicamento</h3>
+                <h3>Agregar nuevo:</h3>
+                <div class="tabs">
+                  <a data-type="divMedicines" class="tabs__button">
+                    Medicamento
+                  </a>
+                  <a data-type="divSupplies" class="tabs__button">
+                    Insumo
+                  </a>
+                </div>
                 <p class="text-subtitle text-muted">
                 </p>
               </div>
@@ -91,48 +100,78 @@ if (!isset($_SESSION['user_name'])) {
           <section class="section">
             <div class="card">
               <div class="card-header">
-                <h4 class="card-title"></h4>
+
               </div>
               <div class="card-body">
-                <section class="section">
-                  <div class="card">
-                    <div class="card-body">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <form action="scripts/add/medicine.php" method="POST" id="formNewMedicine">
-                            <div class="form-group">
-                              <label for="basicInput">Nombre del medicamento</label>
-                              <input type="text" class="form-control" name="name" id="name" placeholder="">
-                            </div>
-                            <div class="form-group">
-                              <label for="basicInput">Presentación</label>
-                              <input type="text" class="form-control" name="presentation" id="presentation" placeholder="">
-                            </div>
-                            <div class="form-group">
-                              <label for="basicInput">Gramaje</label>
-                              <input type="text" class="form-control" name="dosage" id="dosage" placeholder="">
-                            </div>
-                            <div class="form-group">
-                              <label for="basicInput">Cantidad que debe haber en sala</label>
-                              <input type="number" class="form-control" name="initial_stock" id="initial_stock" min=0 placeholder="">
-                            </div>
-                            <div class="form-group">
-                              <label for="basicInput">Asignar a la clínica:</label>
-                              <select class="form-control" id="clinic" name="clinic" required>
-                                <option value=0 selected disabled readonly>Selecciona</option>
-                                <option data-clinicname="CDMX" value=1>CDMX</option>
-                                <option data-clinicname="Culiacán" value=2>Culiacán</option>
-                                <option data-clinicname="Mazatlán" value=3>Mazatlán</option>
-                                <option data-clinicname="Tijuana" value=4>Tijuana</option>
-                              </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-block me-1 mb-1">
-                              Añadir a la lista de medicamentos
-                            </button>
-                          </form>
+                <section id="divMedicines" style="display:none;">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <form action="scripts/add/medicine.php" method="POST" class="formNewMedicine">
+                        <input type="text" class="form-control" name="item_class_m" id="item_class_m" value="medicine">
+                        <div class="form-group">
+                          <label for="basicInput">Nombre del medicamento</label>
+                          <input type="text" class="form-control" name="name_m" id="name_m" placeholder="">
                         </div>
-
-                      </div>
+                        <div class="form-group">
+                          <label for="basicInput">Presentación</label>
+                          <input type="text" class="form-control" name="presentation_m" id="presentation_m" placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Gramaje</label>
+                          <input type="text" class="form-control" name="dosage_m" id="dosage_m" placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Cantidad que debe haber en bodega</label>
+                          <input type="number" class="form-control" name="initial_stock_m" id="initial_stock_m" min=0 placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Asignar a la clínica:</label>
+                          <select class="form-control" id="clinic_m" name="clinic_m" required>
+                            <option value=0 selected disabled readonly>Selecciona</option>
+                            <option data-clinicname="CDMX" value=1>CDMX</option>
+                            <option data-clinicname="Culiacán" value=2>Culiacán</option>
+                            <option data-clinicname="Mazatlán" value=3>Mazatlán</option>
+                            <option data-clinicname="Tijuana" value=4>Tijuana</option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block me-1 mb-1">
+                          Añadir a la lista de medicamentos
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </section>
+                <section id="divSupplies" style="display:none;">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <form action="scripts/add/medicine.php" method="POST" class="formNewMedicine">
+                        <input type="text" class="form-control" name="item_class_s" id="item_class_s" value="supplie">
+                        <div class="form-group">
+                          <label for="basicInput">Nombre del insumo</label>
+                          <input type="text" class="form-control" name="name_s" id="name_s" placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Unidad de Medida</label>
+                          <input type="text" class="form-control" name="measure_s" id="measure_s" placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Cantidad que debe haber en bodega</label>
+                          <input type="number" class="form-control" name="initial_stock_s" id="initial_stock_s" min=0 placeholder="">
+                        </div>
+                        <div class="form-group">
+                          <label for="basicInput">Asignar a la clínica:</label>
+                          <select class="form-control" id="clinic_s" name="clinic_s" required>
+                            <option value=0 selected disabled readonly>Selecciona</option>
+                            <option data-clinicname="CDMX" value=1>CDMX</option>
+                            <option data-clinicname="Culiacán" value=2>Culiacán</option>
+                            <option data-clinicname="Mazatlán" value=3>Mazatlán</option>
+                            <option data-clinicname="Tijuana" value=4>Tijuana</option>
+                          </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block me-1 mb-1">
+                          Añadir a la lista de insumos
+                        </button>
+                      </form>
                     </div>
                   </div>
                 </section>
@@ -151,14 +190,25 @@ if (!isset($_SESSION['user_name'])) {
   <script src="assets/extensions/perfect-scrollbar/perfect-scrollbar.min.js"></script>
   <script src="assets/compiled/js/app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+  <script src="assets/js/scripts.js"></script>
+
   <script>
     $(document).ready(function() {
-      $("#formNewMedicine").submit(function(e) {
+      $(".tabs__button").click(function(e) {
         e.preventDefault();
 
+        $("#divMedicines,#divSupplies").css('display', 'none');
+
+        const tab = "#" + $(this).data('type');
+        $(tab).fadeIn("slow");
+      });
+      $(".formNewMedicine").submit(function(e) {
+        e.preventDefault();
         const method = $(this).attr('method');
         const url = $(this).attr('action');
         const formData = $(this).serialize();
+
+        console.log(formData);
         $.ajax({
           method: method,
           url: url,
@@ -179,7 +229,7 @@ if (!isset($_SESSION['user_name'])) {
             });
           } else {
             Swal.fire({
-              title: 'Error',
+              title: 'Error 400',
               text: response.message,
               icon: 'error',
               timer: 2500,
@@ -188,8 +238,9 @@ if (!isset($_SESSION['user_name'])) {
             });
           }
         }).fail(function(response) {
+          console.log(response)
           Swal.fire({
-            title: 'Error',
+            title: 'Error 501',
             text: response.message,
             icon: 'error',
             timer: 2500,

@@ -18231,3 +18231,140 @@ a {
 .icon-rev:before {
   content: "\f249";
 }
+
+
+
+#table1 tr:hover{
+  transition: background-color 0.3s ease;
+}
+#table1 tr:hover {
+  background-color: #e0ac44 !important;
+}
+/* General button style */
+.btn-options {
+  border: none !important;
+  color: inherit !important;
+  background: none !important;
+  cursor: pointer !important;
+  display: inline-block !important;
+  margin: 15px 30px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  font-weight: 700 !important;
+  outline: none !important;
+  position: relative !important;
+}
+
+.btn-options:after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  transition: all 0.3s;
+}
+
+/* Pseudo elements for icons */
+.btn-options:before {
+  font-family: "FontAwesome";
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+
+  position: absolute;
+  height: 100%;
+  left: 0;
+  top: 0;
+  line-height: 3;
+  font-size: 140%;
+  width: 60px;
+}
+
+.btn-sep {
+  padding: 25px 60px 25px 120px;
+}
+
+.btn-sep:before {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Button 1 */
+.btn-1 {
+  background: #3498db !important;
+  color: #fff !important;
+}
+
+.btn-1:hover {
+  background: #2980b9 !important;
+}
+
+.btn-1:active {
+  background: #2980b9 !important;
+  top: 2px;
+}
+
+/* Button 2 */
+.btn-2 {
+  background: #2ecc71 !important;
+  color: #fff !important;
+}
+
+.btn-2:hover {
+  background: #27ae60 !important;
+}
+
+.btn-2:active {
+  background: #27ae60 !important;
+}
+
+/* Button 3 */
+.btn-3 {
+  background: #e74c3c !important;
+  color: #fff !important;
+}
+
+.btn-3:hover {
+  background: #c0392b !important;
+}
+
+.btn-3:active {
+  background: #c0392b !important;
+  top: 2px;
+}
+
+/* Botón 4 */
+.btn-4 {
+  background: #95a5a6 !important; /* Color gris metálico base */
+  color: #fff !important; /* Texto blanco */
+  border: 1px solid #7f8c8d; /* Borde para un efecto más metálico */
+}
+
+.btn-4:hover {
+  background: #7f8c8d !important; /* Un gris un poco más oscuro para el hover */
+}
+
+.btn-4:active {
+  background: #7f8c8d !important;
+  top: 2px; /* Desplazamiento hacia abajo al hacer clic */
+}
+
+
+.icon-info:before {
+  content: "\f05a";
+}
+
+.icon-pills:before {
+  content: "\f0fa";
+}
+
+.icon-photo:before {
+  content: "\f03e";
+}
+
+.icon-rev:before{
+  content: "\f249";
+}
