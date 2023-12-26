@@ -138,7 +138,7 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
         </nav>
       </header>
       <div id="main-content">
-        <h3>Lista de fármacos</h3>
+        <h3>Lista de medicamentos</h3>
         <!-- Basic Tables start -->
         <div class="card-body">
           <div class="table-responsive">
@@ -175,7 +175,7 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
             <i data-feather="x"></i>
           </button>
         </div>
-        <form action="scripts/actualizar_medicamento.php" method="POST">
+        <form action="scripts/update/medicine.php" method="POST" id="formUpdateMedicine">
           <div class="modal-body">
             <label for="medicamento_id">ID</label>
             <div class="form-group">
@@ -203,12 +203,52 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
               <i class="bx bx-x d-block d-sm-none"></i>
               <span class="d-sm-block">Cerrar</span>
             </button>
-            <button type="submit" class="btn btn-success ms-1" data-bs-dismiss="modal">
+            <button type="submit" class="btn btn-success ms-1">
               <i class="bx bx-check d-block d-sm-none"></i>
               <span class="d-sm-block">Actualizar</span>
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- El Modal -->
+  <div class="modal" id="abastecerModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Cabecera del Modal -->
+        <div class="modal-header">
+          <h4 class="modal-title">Actualizar <strong id="spanNameMed"></strong></h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Contenido del Modal -->
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-4 mx-auto text-center">
+              <span>Cantidad que debe haber: <strong id="spanQtySala"></strong></span>
+            </div>
+            <div class="col-4 mx-auto text-center">
+              <span>Cantidad actual:<br> <strong id="spanQtyActual"></strong></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-4 mx-auto text-center">
+              Cantidad abastecida:<br>
+              <input type="hidden" id="id_farmaco" name="id_farmaco">
+              <input type="number" class="form-control" id="qty_abastecida" name="qty_abastecida" min=0>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pie del Modal -->
+        <div class="modal-footer">
+          <button type="button" id="qtyAbastecida" class="btn btn-success" data-dismiss="modal">Guardar cambios</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -227,26 +267,70 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
   <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
-  <script>
-    let jquery_datatable = $("#table1").DataTable({
-      ajax: 'scripts/load/medicines.php',
-      autoWidth: false,
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
-      },
-      dom: 'Bfrltip',
-      buttons: [
-        'excel', 'pdf'
-      ]
-    });
 
-    const setTableColor = () => {
-      document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {
-        dt.classList.add('pagination-primary')
-      })
-    }
-    setTableColor()
-    jquery_datatable.on('draw', setTableColor)
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      let jquery_datatable = $("#table1").DataTable({
+        ajax: 'scripts/load/medicines.php',
+        autoWidth: false,
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
+        },
+        dom: 'Bfrltip',
+        buttons: [
+          'excel', 'pdf'
+        ]
+      });
+
+      const setTableColor = () => {
+        document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {
+          dt.classList.add('pagination-primary')
+        })
+      }
+      setTableColor()
+      jquery_datatable.on('draw', setTableColor)
+
+      $("#formUpdateMedicine").submit(function(e) {
+        e.preventDefault();
+        let formData = $(this).serialize();
+        let method = $(this).attr('method');
+        let url = $(this).attr('action');
+
+        $.ajax({
+          method: method,
+          url: url,
+          data: formData,
+          dataType: 'json'
+        }).done(function(response) {
+          if (response.success) {
+
+            Swal.fire({
+              title: 'Listo!',
+              text: response.message,
+              icon: 'success',
+              timer: 2000, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false
+            }).then((result) => {
+              location.reload();
+            });
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: response.message,
+              icon: 'error',
+              timer: 2500, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+              timerProgressBar: true, // Muestra una barra de progreso
+              showConfirmButton: false // No muestra el botón de confirmación
+            });
+          }
+        }).fail(function(response) {
+          console.log(response);
+        });
+      });
+    });
 
     $(document).on("click", ".ver_medicamento", function() {
       let fields = ["med_id", "name", "presentation", "dosage", "initial_stock"];
@@ -262,20 +346,61 @@ if (!isset($_SESSION['user_name']) || !isset($_GET['clinic'])) {
     });
 
     $(document).on("click", ".btn_abastecer", function() {
-      let medicamento_id = $(this).attr('medicamento_id');
+      let tr = $(this).closest('tr');
+      let items = [0, 1, 4, 5, 6];
+      let selectedData = [];
 
-      $("#id_farmaco").val(medicamento_id);
+      tr.find('td').each(function(index) {
+        if (items.includes(index)) {
+          // Agrega el contenido de la celda al arreglo selectedData
+          selectedData.push($(this).text());
+        }
+      });
+      let item_id = selectedData[0];
+      let name = selectedData[1];
+      let initial_stock = selectedData[2];
+      let current_stock = selectedData[3];
+      let max = selectedData[4];
 
-      let qty_sala = $(this).data('sala');
-      let qty_actual = $(this).data('actual');
-      let qty_abastecida = qty_sala - qty_actual;
+      $("#id_farmaco").val(item_id);
+      $("#spanNameMed").html(name);
+      $("#spanQtyActual").html(initial_stock);
+      $("#spanQtySala").html(current_stock);
 
-
-      $("#spanQtyActual").html(qty_actual);
-      $("#spanQtySala").html(qty_sala);
-      $("#qty_abastecida").val(qty_abastecida);
-
+      $("#qty_abastecida").attr('max', max);
       $("#abastecerModal").modal("show");
+    });
+
+    $(document).on("click", "#qtyAbastecida", function(e) {
+      e.preventDefault();
+
+      var id_farmaco = $("#id_farmaco").val();
+      var qty_abastecida = $("#qty_abastecida").val();
+
+      $.ajax({
+        type: "POST",
+        url: 'scripts/update/qty_medicine.php',
+        data: {
+          id: id_farmaco,
+          qty_abastecida: qty_abastecida
+        },
+        dataType: 'json'
+      }).done(function(response) {
+        if (response.success) {
+          Swal.fire({
+            title: 'Listo!',
+            text: response.message,
+            icon: 'success',
+            timer: 2000, // Tiempo en milisegundos (en este caso, 3000 ms = 3 segundos)
+            timerProgressBar: true, // Muestra una barra de progreso
+            showConfirmButton: false
+          }).then((result) => {
+            location.reload();
+          });
+        }
+      }).fail(function(response) {
+        console.log(response);
+      });
     });
   </script>
 </body>
