@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($success) {
         echo json_encode([
             'success' => true,
-            'message' => 'Medicamento registrado correctamente'
+            'message' => 'Insumo registrado correctamente'
         ]);
     } else {
         echo json_encode([

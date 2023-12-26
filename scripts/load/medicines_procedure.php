@@ -6,7 +6,7 @@ require_once '../connection_db.php';
 $data_array = array();
 $procedure_id = $_POST['procedure_id'];
 
-$sql = "SELECT eum.id, eum.quantity, DATE_FORMAT(eum.time, '%H:%i') time, eum.comments, em.name FROM enf_used_medicines eum LEFT JOIN enf_medicines em ON eum.medicine_id = em.id WHERE eum.procedure_id = $procedure_id ORDER BY time DESC;";
+$sql = "SELECT eum.id, eum.medicine_id,eum.quantity, DATE_FORMAT(eum.time, '%h:%i %p') time, eum.comments, em.name FROM enf_used_medicines eum LEFT JOIN enf_medicines em ON eum.medicine_id = em.id WHERE eum.procedure_id = $procedure_id ORDER BY eum.time DESC;";
 
 $query = $conn->query($sql);
 
@@ -17,7 +17,8 @@ if (mysqli_num_rows($query) > 0) {
             $data->quantity,
             $data->time,
             $data->comments,
-            $data->name
+            $data->name,
+            $data->medicine_id
         );
     }
 }

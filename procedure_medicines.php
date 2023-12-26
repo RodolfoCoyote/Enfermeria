@@ -221,6 +221,7 @@ if (!isset($_SESSION['user_name'])) {
             <div class="row">
               <div class="col-12">
                 <input type="hidden" id="form_type" name="form_type">
+                <input type="hidden" id="used_medicines_id" name="used_medicines_id">
                 <input type="hidden" id="procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
                 <input type="hidden" id="medicine_id" name="medicine_id" value="">
                 <div class="form-group">
@@ -233,6 +234,8 @@ if (!isset($_SESSION['user_name'])) {
                 </div>
                 <div class="form-group">
                   <label for="hour">Cantidad suministrada:</label>
+                  <input type="hidden" class="form-control" name="qtybackup" id="qtybackup" min=0 required>
+
                   <input type="number" class="form-control" name="qty" id="qty" min=0 required>
                 </div>
                 <div class="form-group">
@@ -247,7 +250,7 @@ if (!isset($_SESSION['user_name'])) {
               <i class="bx bx-x d-block d-sm-none"></i>
               <span class="d-sm-block">Cerrar</span>
             </button>
-            <button type="button" id="btnDelMedicine" class="btn btn-danger ms-1">
+            <button data-type="medicine" type="button" id="btnDelMedicine" class="del_item btn btn-danger ms-1">
               <i class="bx bx-check d-block d-sm-none"></i>
               <span class="d-sm-block">Eliminar</span>
             </button>
@@ -273,15 +276,17 @@ if (!isset($_SESSION['user_name'])) {
           <div class="modal-body">
             <div class="row">
               <div class="col-12">
-                <input type="text" id="supply_form_type" name="form_type">
-                <input type="text" id="supply_procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
-                <input type="text" id="supply_id" name="supply_id" value="">
+                <input type="hidden" id="supply_form_type" name="form_type">
+                <input type="hidden" id="used_supplies_id" name="used_supplies_id">
+                <input type="hidden" id="supply_procedure_id" name="procedure_id" value="<?= $_GET['id']; ?>">
+                <input type="hidden" id="supply_id" name="supply_id" value="">
                 <div class="form-group">
                   <label for="hour">Nombre del Insumo:</label>
                   <input type="text" class="form-control" name="name" id="supply_name" disabled>
                 </div>
                 <div class="form-group">
-                  <label for="hour">Cantidad suministrada:</label>
+                  <label for="hour">Cantidad utilizada:</label>
+                  <input type="hidden" class="form-control" name="qtybackup" id="supply_qtybackup" min=0 required>
                   <input type="number" class="form-control" name="qty" id="supply_qty" min=0 required>
                 </div>
                 <div class="form-group">
@@ -296,7 +301,7 @@ if (!isset($_SESSION['user_name'])) {
               <i class="bx bx-x d-block d-sm-none"></i>
               <span class="d-sm-block">Cerrar</span>
             </button>
-            <button type="button" id="btnDelSupply" class="btn btn-danger">
+            <button data-type="supply" type="button" id="btnDelSupply" class="del_item btn btn-danger">
               <i class="bx bx-x d-block d-sm-none"></i>
               <span class="d-sm-block">Eliminar</span>
             </button>
@@ -328,7 +333,6 @@ if (!isset($_SESSION['user_name'])) {
         primaryColor: "#e0ac44",
         borderColor: "#e0ac44",
       });
-
 
       $.ajax({
         method: 'POST',
@@ -467,7 +471,7 @@ if (!isset($_SESSION['user_name'])) {
         console.log(response);
         $.each(response.data, function(index, value) {
           let medicines = `
-            <li class="limedicine list-group-item d-flex justify-content-between align-items-start" data-medicineid=${value[0]} data-name="${value[4]}" data-qty="${value[1]}" data-time="${value[2]}" data-comments="${value[3]}">
+            <li class="limedicine list-group-item d-flex justify-content-between align-items-start" data-id=${value[0]} data-name="${value[4]}" data-qty="${value[1]}" data-time="${value[2]}" data-comments="${value[3]}" data-medicineid="${value[5]}">
               <div class="ms-2">
                 <div class="fw-bold">${value[4]} (${value[1]})</div>
               </div>
@@ -491,11 +495,11 @@ if (!isset($_SESSION['user_name'])) {
         console.log(response);
         $.each(response.data, function(index, value) {
           let supplies = `
-            <li class="limedicine list-group-item d-flex justify-content-between align-items-start" data-supplyid=${value[0]} data-name="${value[1]}" data-qty="${value[2]}" data-notes="${value[3]}">
+            <li class="lisupplies list-group-item d-flex justify-content-between align-items-start" data-id=${value[0]} data-supplyid="${value[1]}" data-name="${value[2]}" data-qty="${value[3]}" data-notes="${value[4]}">
               <div class="ms-2">
-                <div class="fw-bold">${value[1]}</div>
+                <div class="fw-bold">${value[2]}</div>
               </div>
-              <span class="badge bg-light rounded-pill">${value[2]}</span>
+              <span class="badge bg-light rounded-pill">${value[3]}</span>
             </li>`;
           $("#olSuppliesUsed").append(supplies);
         });
@@ -614,6 +618,49 @@ if (!isset($_SESSION['user_name'])) {
         const tab = "#" + $(this).data('type');
         $(tab).fadeIn("slow");
       });
+
+      $(".del_item").click(function(e) {
+        e.preventDefault();
+        let type = $(this).data('type');
+        let id = $(this).data('id');
+        let item_id = (type == "medicine") ? $("#medicine_id").val() : $("#supply_id").val();
+        let qtybackup = (type == "medicine") ? $("#qtybackup").val() : $("#supply_qtybackup").val();
+
+        Swal.fire({
+          title: '¿Estás segura/o?',
+          text: "Esta acción no se puede revertir.",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Sí, eliminar!',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              method: 'POST',
+              url: "scripts/delete/" + type + "_procedure.php",
+              data: {
+                id: id,
+                qtybackup: qtybackup,
+                item_id: item_id
+              },
+              dataType: 'json'
+            }).done(function(response) {
+              Swal.fire(
+                'Eliminado!',
+                'El registro ha sido eliminado.',
+                'success'
+              ).then(() => {
+                // Recargar la página después de cerrar la alerta
+                location.reload();
+              });
+            }).fail(function(response) {
+              console.log(response);
+            });
+          }
+        })
+      });
     });
 
 
@@ -638,35 +685,42 @@ if (!isset($_SESSION['user_name'])) {
       $("#supplyDataModal").modal("show");
     });
     $(document).on("click", "#olMedicinesUsed li", function() {
+      let id = $(this).data('id');
       let medicine_id = $(this).data('medicineid');
       let medicine_name = $(this).data('name');
       let medicine_qty = $(this).data('qty');
       let medicine_comments = $(this).data('comments');
       let medicine_time = $(this).data('time');
-
+      $("#used_medicines_id").val(id);
       $("#medicine_name").val(medicine_name);
       $("#medicine_id").val(medicine_id);
       $("#hour").val(medicine_time);
-      $("#qty").val(medicine_qty);
+      $("#qty,#qtybackup").val(medicine_qty);
       $("#comments").val(medicine_comments);
 
       $("#form_type").val("update");
+      $("#btnDelMedicine").data('id', id);
       $("#btnDelMedicine").css('display', 'block');
 
       $("#medicineDataModal").modal("show");
     });
     $(document).on("click", "#olSuppliesUsed li", function() {
+      let id = $(this).data('id');
       let supply_id = $(this).data('supplyid');
       let supply_name = $(this).data('name');
       let supply_qty = $(this).data('qty');
       let supply_comments = $(this).data('notes');
 
-      $("#supply_name").val(supply_name);
+      $("#supply_form_type").val("update");
+      $("#used_supplies_id").val(id);
       $("#supply_id").val(supply_id);
+
+      $("#supply_name").val(supply_name);
       $("#supply_qty").val(supply_qty);
+      $("#supply_qtybackup").val(supply_qty);
       $("#supply_comments").val(supply_comments);
 
-      $("#supply_form_type").val("update");
+      $("#btnDelSupply").data('id', id);
       $("#btnDelSupply").css('display', 'block');
 
       $("#supplyDataModal").modal("show");

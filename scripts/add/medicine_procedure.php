@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO enf_used_medicines (medicine_id, procedure_id, quantity, time, comments, updated_by) VALUES (?, ?, ?, ?, ?, ?);";
     $sql = $conn->prepare($sql);
 
-    $sql->bind_param("iiissi", $procedure_id, $medicine_id, $qty, $timeFormatted, $comments, $updated_by);
+    $sql->bind_param("iiissi", $medicine_id, $procedure_id, $qty, $timeFormatted, $comments, $updated_by);
     $success = ($sql->execute()) ? true : false;
 
     $sql = "UPDATE enf_medicines SET current_stock = current_stock - ? WHERE id = ?;";

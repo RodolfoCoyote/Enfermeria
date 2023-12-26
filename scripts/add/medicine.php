@@ -25,12 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if ($item_class = "supplie") {
             $name = $_POST['name_s'];
             $measure = $_POST['measure_s'];
-            $initial_stock = $_POST['initial_stock_s'];
+            $initial_stock = $current_stock = $_POST['initial_stock_s'];
             $clinic = $_POST['clinic_s'];
             // Prepara la consulta
-            $sql = $conn->prepare("INSERT INTO enf_supplies (name, measure, initial_stock, clinic) VALUES (?, ?, ?, ?)");
+            $sql = $conn->prepare("INSERT INTO enf_supplies (name, measure, initial_stock, current_stock, clinic) VALUES (?, ?, ?, ?, ?)");
             // Vincula los parámetros
-            $sql->bind_param("ssii", $name, $measure, $initial_stock, $clinic);
+            $sql->bind_param("ssiii", $name, $measure, $initial_stock, $current_stock, $clinic);
         }
 
         if ($sql->execute()) {

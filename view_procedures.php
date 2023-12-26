@@ -20,7 +20,7 @@ if (!isset($_SESSION['user_name'])) {
   <link rel="stylesheet" href="./assets/compiled/css/app.css" />
   <link rel="stylesheet" href="./assets/compiled/css/app-dark.css" />
   <link rel="stylesheet" href="./assets/extensions/font-awesome/css/font-awesome.css" />
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
 
   <style>
     #table1 thead tr th {
@@ -223,24 +223,28 @@ if (!isset($_SESSION['user_name'])) {
   <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
-  <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+  <script src="https://cdn.datatables.net/plug-ins/1.10.25/sorting/datetime-moment.js"></script>
+
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
   <script>
     $(document).ready(function() {
       /* =============== DATATABLE Start =============== */
+      DataTable.datetime('DD/MM/YYYY');
+
       let jquery_datatable = $("#table1").DataTable({
         ajax: 'scripts/load/procedures.php',
         autoWidth: false,
         language: {
           url: '//cdn.datatables.net/plug-ins/1.13.5/i18n/es-ES.json'
         },
-
         scrollX: true,
         order: [
-          [1, 'desc']
-        ],
+          [0, 'desc']
+        ] // Asume que la columna 0 es donde están tus fechas
       });
       const setTableColor = () => {
         document.querySelectorAll('.dataTables_paginate .pagination').forEach(dt => {

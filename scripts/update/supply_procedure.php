@@ -7,9 +7,19 @@ session_start();
 require_once "../connection_db.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id = $_POST['supply_id'];
+    $id = $_POST['used_supplies_id'];
+    $supply_id = $_POST['supply_id'];
+
     $qty = $_POST['qty'];
+    $qtybackup = $_POST['qtybackup'];
     $comments = $_POST['comments'];
+
+    $qty_updated = $qtybackup - $qty;
+
+    $sql = "UPDATE enf_supplies SET current_stock = current_stock + ? WHERE id = ?;";
+    $sql = $conn->prepare($sql);
+    $sql->bind_param("ii", $qty_updated, $supply_id);
+    $success = ($sql->execute()) ? true : false;
 
     $sql = "UPDATE enf_used_supplies SET quantity = ?, notes = ? WHERE id = ?";
     $sql = $conn->prepare($sql);
